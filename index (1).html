@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>إنترنت الأشياء — مسار تعلم رقمي تفاعلي (4 وحدات RLOs)</title>
+<style>
+:root{
+  --ink:#0f2a2e; --deep:#0b3b40; --teal:#0e7c7b; --mint:#d9f2ee; --paper:#f6faf9;
+  --card:#fff; --line:#d5e3e1; --amber:#f2a516; --ok:#1e8e5a; --okbg:#e3f6ec;
+  --bad:#c0392b; --badbg:#fdecea; --muted:#5b7376; --sky:#e7f0fb;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Tahoma,"Noto Sans Arabic","Noto Kufi Arabic",Arial,sans-serif;background:var(--paper);color:var(--ink);line-height:1.8;font-size:17px}
+button{font:inherit;cursor:pointer;color:inherit}
+.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+aside{background:var(--deep);color:#e8f5f3;padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-weight:800;font-size:1.12rem;line-height:1.5}
+.brand small{display:block;font-weight:400;color:#a9d2cd;font-size:.78rem}
+.bar{height:8px;background:#ffffff22;border-radius:8px;margin:14px 0 4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--amber);transition:width .4s}
+.barlbl{font-size:.8rem;color:#a9d2cd;margin-bottom:6px}
+nav h4{margin:16px 0 4px;font-size:.78rem;color:var(--amber)}
+nav button{display:flex;gap:9px;align-items:center;width:100%;text-align:right;background:none;border:0;color:#e8f5f3;padding:6px 9px;border-radius:9px;font-size:.88rem;line-height:1.5}
+nav button:hover{background:#ffffff14}
+nav button.on{background:var(--teal);font-weight:700}
+nav .dot{flex:0 0 20px;height:20px;border-radius:50%;border:2px solid #7fb9b3;display:grid;place-items:center;font-size:.68rem}
+nav button.done .dot{background:var(--amber);border-color:var(--amber);color:var(--deep);font-weight:800}
+main{padding:30px clamp(16px,5vw,60px) 70px;max-width:1000px}
+main:focus{outline:none}
+.unitbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;background:var(--mint);border-radius:14px;padding:8px 14px;font-size:.86rem;color:var(--deep);margin-bottom:14px}
+.unitbar b{color:var(--teal)}
+.unitbar .lo{flex:1 1 320px}
+.tag{display:inline-block;background:var(--mint);color:var(--teal);font-weight:700;font-size:.8rem;padding:2px 12px;border-radius:20px}
+h1{font-size:clamp(1.45rem,3.2vw,2rem);margin:8px 0 6px;line-height:1.4}
+.lead{color:var(--muted);margin:0 0 16px;font-size:1.04rem}
+.hint{display:flex;gap:8px;align-items:center;font-weight:700;color:var(--teal);margin:14px 0 10px}
+.hint::before{content:"👆"}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.tile{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 16px;text-align:right;transition:.2s;display:flex;flex-direction:column;gap:4px}
+.tile:hover{border-color:var(--teal);transform:translateY(-2px)}
+.tile .ic{font-size:1.7rem;line-height:1.2}
+.tile .q{color:var(--muted);font-size:.9rem}
+.tile .more{display:none;font-size:.93rem;border-top:1px dashed var(--line);padding-top:8px;margin-top:4px}
+.tile.open{border-color:var(--teal);background:#f0faf8}
+.tile.open .more{display:block}
+.tile.seen{border-color:#9fd1c8}
+.num{align-self:flex-start;background:var(--deep);color:#fff;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:700}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:16px 0}
+.box h3{margin:0 0 6px;font-size:1rem;color:var(--teal)}
+.fb{display:none;border-radius:14px;padding:12px 18px;margin:14px 0;font-weight:600}
+.fb.show{display:block}
+.fb.ok{background:var(--okbg);color:#14613d;border:1px solid #a8dcc0}
+.fb.no{background:var(--badbg);color:#8e2a20;border:1px solid #f0b8b1}
+.fb.ok::before{content:"✔ "}.fb.no::before{content:"✖ "}
+.opts{display:grid;gap:10px;margin:12px 0}
+.opt{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 16px;text-align:right}
+.opt:hover{border-color:var(--teal)}
+.opt.sel{border-color:var(--teal);background:#f0faf8}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:12px;padding:9px 22px;font-weight:700}
+.btn:disabled{background:#b9c9c7;cursor:not-allowed}
+.btn.ghost{background:none;color:var(--teal);border:2px solid var(--teal)}
+.btn.amber{background:var(--amber);color:var(--deep)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
+/* media */
+.media{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;margin:14px 0}
+.media svg{display:block;width:100%;height:auto}
+.cap{font-size:.8rem;color:var(--muted);padding:4px 14px 8px}
+.hs{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:var(--amber);box-shadow:0 2px 8px #0004;font-weight:800;color:var(--deep);display:grid;place-items:center;font-size:.95rem}
+.hs::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--amber);animation:pulse 1.6s infinite}
+.hs.seen{background:var(--ok);color:#fff}.hs.seen::after{display:none}
+.hs.cur{outline:4px solid var(--deep)}
+@keyframes pulse{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.tip{position:absolute;z-index:3;width:min(260px,70%);background:var(--deep);color:#fff;border-radius:12px;padding:10px 14px;font-size:.88rem;line-height:1.6;box-shadow:0 6px 18px #0005;pointer-events:none}
+.tip b{color:var(--amber);display:block}
+.panel{background:#f0faf8;border:2px solid var(--teal);border-radius:16px;padding:12px 18px;margin-top:12px}
+.panel h3{margin:0;color:var(--teal);font-size:1.02rem}
+/* keywords */
+.def{font-size:1.25rem;line-height:2.1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px}
+.kw{border-radius:6px;padding:0 3px;transition:background .5s,color .5s}
+.kw.lit{background:var(--amber);color:var(--deep);font-weight:700}
+/* modal */
+.modal{position:fixed;inset:0;background:#0b3b40aa;display:grid;place-items:center;z-index:20;padding:16px}
+.modal .in{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:22px 24px;box-shadow:0 20px 50px #0006}
+.modal .in h2{margin:0 0 6px;color:var(--teal);font-size:1.3rem}
+.modal .ex{background:var(--sky);border-radius:12px;padding:10px 14px;margin:12px 0}
+/* stepper infographic */
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.stage{position:relative;background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px;text-align:center;opacity:.35;transition:.35s}
+.stage .ic{font-size:2rem;display:block}
+.stage b{display:block;font-size:.92rem;line-height:1.5}
+.stage.on{opacity:1;border-color:var(--teal)}
+.stage.cur{background:#f0faf8;box-shadow:0 0 0 4px #0e7c7b33;animation:pop .5s}
+@keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.stage:not(:last-child)::after{content:"←";position:absolute;left:-14px;top:40%;font-weight:800;color:var(--teal)}
+/* drag */
+.dd{display:grid;gap:14px}
+.zone{border:2px dashed var(--line);border-radius:16px;padding:12px;min-height:120px;background:#fff;text-align:right}
+.zone h3{margin:0 0 8px;font-size:.95rem;color:var(--muted)}
+.zone.target{border-color:var(--teal);background:#f0faf8}
+.zone.over,.zone.armed{background:var(--mint);border-style:solid}
+.chips{display:flex;flex-wrap:wrap;gap:10px;min-height:44px}
+.chip{background:#fff;border:2px solid var(--line);border-radius:30px;padding:7px 15px}
+.chip:hover{border-color:var(--amber)}
+.chip.picked{border-color:var(--amber);background:#fff5df;box-shadow:0 0 0 3px #f2a51655}
+.chip.bad{border-color:var(--bad);background:var(--badbg)}
+.chip.good{border-color:var(--ok);background:var(--okbg)}
+/* flip */
+.flip{perspective:900px;height:190px;background:none;border:0;padding:0;text-align:right}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.flip .f{background:#fff;border:2px solid var(--line)}
+.flip .b{background:var(--deep);color:#fff;transform:rotateY(180deg);font-size:.95rem}
+.flip .f .ic{font-size:2rem}
+.flip .f small{color:var(--muted)}
+/* process steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;position:relative}
+/* cover & menu */
+.cover{min-height:70vh;display:grid;align-content:center;gap:10px}
+.cover h1{font-size:clamp(1.9rem,4.6vw,2.8rem)}
+.cover .meta{color:var(--muted);font-size:.95rem}
+.units{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
+.ucard{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.ucard .k{font-size:.78rem;color:var(--teal);font-weight:800}
+.ucard h3{margin:0;font-size:1.08rem}
+.ucard p{margin:0;font-size:.9rem;color:var(--muted)}
+.ucard .pr{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.ucard .pr i{display:block;height:100%;background:var(--amber)}
+.goals{padding:0;margin:0;list-style:none;display:grid;gap:8px}
+.goals li{display:flex;gap:10px}.goals li::before{content:"◆";color:var(--amber)}
+.score{font-size:2.8rem;font-weight:800;color:var(--teal);line-height:1.2}
+.refs li{margin-bottom:10px}
+.refs a{color:var(--teal);word-break:break-all}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.legend div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.9rem}
+.menuBtn{display:none}
+/* svg states */
+svg text{font-family:inherit}
+.link{stroke-dasharray:6 6}
+.svgOn .link{animation:flow 1s linear infinite;stroke:#0e7c7b}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.node circle{fill:#fff;stroke:#0e7c7b;stroke-width:3;transition:.3s}
+.node.hl circle{fill:#fff1cf;stroke:#f2a516;stroke-width:5}
+.room{fill:#fff;stroke:#7fa9a5;stroke-width:3;transition:.3s}
+.on-living .r-living,.on-bed .r-bed,.on-door .r-door{fill:#fff6dd}
+.lamp{fill:#d8dee0;transition:.3s}.on-living .lamp{fill:#f2a516}
+.glow{opacity:0;transition:.3s}.on-living .glow{opacity:.35}
+.acwave{opacity:0;transition:.3s}.on-bed .acwave{opacity:1}
+.alert{opacity:0;transition:.3s}.on-door .alert{opacity:1}
+.cls-board .z-board,.cls-door .z-door,.cls-power .z-power{stroke:#f2a516;stroke-width:5}
+.w-watch .z-watch,.w-remote .z-remote,.w-alert .z-alert{stroke:#f2a516;stroke-width:5}
+.bad-hr{display:none;fill:#ffd5cf}.w-alert .bad-hr{display:inline}.w-alert .hr-ok{display:none}
+.lockon{opacity:0;transition:.3s}.p-enc .lockon{opacity:1}
+.p-consent .z-consent{stroke:#f2a516;stroke-width:5}
+.fixed-pw .pw-bad{display:none}.pw-good{display:none}.fixed-pw .pw-good{display:inline}
+.fixed-fw .fw-bad{display:none}.fw-good{display:none}.fixed-fw .fw-good{display:inline}
+.fixed-pw .z-pw,.fixed-fw .z-fw{stroke:#1e8e5a}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  aside{position:fixed;inset:0 0 0 auto;width:min(300px,86vw);display:none;z-index:15;box-shadow:0 0 0 100vmax #0006}
+  aside.show{display:block}
+  .menuBtn{display:inline-block;position:sticky;top:10px;z-index:4;margin:10px 16px 0;background:var(--deep);color:#fff;border:0;border-radius:10px;padding:8px 14px}
+  main{padding-top:12px}
+  .stages{grid-template-columns:repeat(2,1fr)}
+  .stage:not(:last-child)::after{display:none}
+  .hs{width:32px;height:32px;font-size:.85rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="side" aria-label="قائمة المحتويات">
+    <div class="brand">إنترنت الأشياء<small>مسار تعلم رقمي تفاعلي · أربع وحدات تعلم RLOs</small></div>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="barlbl" id="barLbl"></div>
+    <nav id="nav"></nav>
+  </aside>
+  <div>
+    <button class="menuBtn" id="menuBtn" aria-controls="side">☰ المحتويات</button>
+    <main id="main" tabindex="-1"></main>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   الصور التفاعلية (رسوم SVG أصلية أُعدّت لهذا المنتج)
+   ========================================================= */
+const IMG = {
+things: `<svg viewBox="0 0 640 270" role="img" aria-label="أجهزة مادية متصلة بالإنترنت تتبادل البيانات">
+  <rect width="640" height="270" fill="#f3faf8"/>
+  <g class="links" stroke="#9cbab6" stroke-width="3" fill="none">
+    <path class="link" d="M120 70 Q220 80 280 120"/><path class="link" d="M120 200 Q220 190 280 150"/>
+    <path class="link" d="M520 70 Q420 80 360 120"/><path class="link" d="M520 200 Q420 190 360 150"/>
+    <path class="link" d="M320 235 L320 170"/></g>
+  <g fill="#d9f2ee"><circle cx="295" cy="128" r="34"/><circle cx="335" cy="108" r="42"/><circle cx="372" cy="134" r="30"/><rect x="270" y="128" width="130" height="38" rx="19"/></g>
+  <text x="335" y="148" text-anchor="middle" font-size="18" font-weight="700" fill="#0b3b40">الإنترنت</text>
+  <g transform="translate(95,50)"><rect x="-16" y="-34" width="32" height="68" rx="8" fill="#0b3b40"/><rect x="-22" y="-20" width="44" height="40" rx="10" fill="#0e7c7b"/><text y="7" text-anchor="middle" font-size="16" fill="#fff">♥</text></g>
+  <text x="95" y="108" text-anchor="middle" font-size="14" fill="#0f2a2e">ساعة ذكية</text>
+  <g transform="translate(95,196)"><rect x="-22" y="-36" width="44" height="72" rx="6" fill="#fff" stroke="#0b3b40" stroke-width="3"/><line x1="-22" y1="-6" x2="22" y2="-6" stroke="#0b3b40" stroke-width="3"/><rect x="12" y="-26" width="4" height="12" fill="#0b3b40"/><rect x="12" y="4" width="4" height="16" fill="#0b3b40"/></g>
+  <text x="95" y="252" text-anchor="middle" font-size="14" fill="#0f2a2e">ثلاجة ذكية</text>
+  <g transform="translate(545,46)"><circle r="22" fill="#f2a516"/><rect x="-10" y="20" width="20" height="14" rx="3" fill="#0b3b40"/></g>
+  <text x="545" y="108" text-anchor="middle" font-size="14" fill="#0f2a2e">مصباح ذكي</text>
+  <g transform="translate(545,196)"><rect x="-38" y="-16" width="76" height="26" rx="10" fill="#0e7c7b"/><rect x="-22" y="-32" width="44" height="20" rx="8" fill="#0e7c7b"/><circle cx="-20" cy="14" r="9" fill="#0b3b40"/><circle cx="20" cy="14" r="9" fill="#0b3b40"/></g>
+  <text x="545" y="240" text-anchor="middle" font-size="14" fill="#0f2a2e">سيارة متصلة</text>
+  <g transform="translate(320,236)"><rect x="-16" y="-12" width="32" height="24" rx="6" fill="#fff" stroke="#0b3b40" stroke-width="3"/><text y="6" text-anchor="middle" font-size="14">🌡️</text></g>
+  <text x="320" y="266" text-anchor="middle" font-size="13" fill="#0f2a2e">مستشعر</text>
+</svg>`,
+pipe(nodes){ // مخطط تدفق من اليمين إلى اليسار
+  const n=nodes.length, w=640, gap=w/(n), r=46; let s=`<svg viewBox="0 0 ${w} 210" role="img" aria-label="مخطط مكونات النظام وتدفق البيانات"><rect width="${w}" height="210" fill="#f3faf8"/>`;
+  nodes.forEach((d,i)=>{const x=w-gap/2-i*gap;
+    if(i<n-1){const x2=x-gap; s+=`<line class="link" x1="${x-r-6}" y1="92" x2="${x2+r+14}" y2="92" stroke="#9cbab6" stroke-width="4"/><path d="M${x2+r+18} 82 L${x2+r+4} 92 L${x2+r+18} 102 Z" fill="#0e7c7b"/>`;}
+    s+=`<g class="node" id="nd${i}"><circle cx="${x}" cy="92" r="${r}"/><text x="${x}" y="105" text-anchor="middle" font-size="34">${d.ic}</text><text x="${x}" y="170" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">${d.t}</text>${d.s?`<text x="${x}" y="192" text-anchor="middle" font-size="13" fill="#5b7376">${d.s}</text>`:''}</g>`;});
+  return s+`</svg>`;
+},
+house: `<svg viewBox="0 0 600 340" role="img" aria-label="مخطط منزل ذكي فيه غرفة معيشة وغرفة نوم ومدخل">
+  <rect width="600" height="340" fill="#eef5f4"/>
+  <rect class="room r-living" x="20" y="20" width="290" height="300" rx="6"/>
+  <rect class="room r-bed" x="310" y="20" width="270" height="150" rx="6"/>
+  <rect class="room r-door" x="310" y="170" width="270" height="150" rx="6"/>
+  <circle class="glow" cx="165" cy="120" r="95" fill="#f2a516"/>
+  <circle class="lamp" cx="165" cy="120" r="18" stroke="#0b3b40" stroke-width="3"/>
+  <rect x="60" y="230" width="200" height="50" rx="14" fill="#9cc7c2"/><rect x="60" y="215" width="200" height="24" rx="10" fill="#7fb3ad"/>
+  <rect x="120" y="170" width="90" height="34" rx="6" fill="#c9dcda"/>
+  <text x="165" y="305" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">غرفة المعيشة</text>
+  <rect x="440" y="70" width="110" height="80" rx="10" fill="#c9dcda"/><rect x="440" y="70" width="110" height="24" rx="10" fill="#fff" stroke="#9cbab6"/>
+  <rect x="330" y="34" width="90" height="26" rx="6" fill="#fff" stroke="#0b3b40" stroke-width="3"/><text x="375" y="53" text-anchor="middle" font-size="13" fill="#0b3b40">❄ 22°</text>
+  <g class="acwave" stroke="#4a90d9" stroke-width="3" fill="none"><path d="M345 70 q8 8 0 16 q-8 8 0 16"/><path d="M375 70 q8 8 0 16 q-8 8 0 16"/><path d="M405 70 q8 8 0 16 q-8 8 0 16"/></g>
+  <text x="375" y="160" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">غرفة النوم</text>
+  <path d="M580 230 A70 70 0 0 0 510 300" fill="none" stroke="#9cbab6" stroke-width="3" stroke-dasharray="5 5"/><line x1="510" y1="300" x2="580" y2="300" stroke="#0b3b40" stroke-width="6"/>
+  <rect x="540" y="184" width="30" height="20" rx="5" fill="#0b3b40"/><circle cx="550" cy="194" r="6" fill="#4a90d9"/>
+  <g class="alert"><rect x="340" y="200" width="120" height="70" rx="12" fill="#fff" stroke="#c0392b" stroke-width="3"/><text x="400" y="228" text-anchor="middle" font-size="22">📱</text><text x="400" y="256" text-anchor="middle" font-size="13" fill="#c0392b" font-weight="700">تنبيه: حركة عند الباب</text></g>
+  <text x="445" y="312" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">المدخل</text>
+</svg>`,
+classroom: `<svg viewBox="0 0 600 340" role="img" aria-label="فصل ذكي فيه سبورة تفاعلية وقارئ بطاقات عند الباب وإضاءة وتكييف">
+  <rect width="600" height="340" fill="#f6efe4"/><rect y="250" width="600" height="90" fill="#e2d6c3"/>
+  <rect class="z-board" x="40" y="60" width="300" height="160" rx="8" fill="#0b3b40" stroke="#5b7376" stroke-width="4"/>
+  <polyline points="70,180 120,140 170,160 230,110 300,130" fill="none" stroke="#f2a516" stroke-width="4"/><text x="190" y="95" text-anchor="middle" font-size="16" fill="#d9f2ee">سبورة تفاعلية</text>
+  <g class="z-power" stroke="#5b7376" stroke-width="3"><rect x="380" y="20" width="160" height="34" rx="8" fill="#fff"/><text x="460" y="43" text-anchor="middle" font-size="14" fill="#0b3b40" stroke="none">❄ تكييف · 💡 إضاءة</text></g>
+  <rect x="460" y="90" width="110" height="160" rx="4" fill="#b98b5e"/><circle cx="475" cy="175" r="5" fill="#0b3b40"/>
+  <rect class="z-door" x="418" y="150" width="30" height="44" rx="6" fill="#fff" stroke="#5b7376" stroke-width="3"/><text x="433" y="178" text-anchor="middle" font-size="14">📶</text>
+  <g fill="#9cc7c2"><rect x="60" y="270" width="110" height="20" rx="4"/><rect x="230" y="270" width="110" height="20" rx="4"/><rect x="400" y="270" width="110" height="20" rx="4"/></g>
+  <g fill="#0e7c7b"><circle cx="115" cy="258" r="12"/><circle cx="285" cy="258" r="12"/><circle cx="455" cy="258" r="12"/></g>
+</svg>`,
+watch: `<svg viewBox="0 0 640 220" role="img" aria-label="ساعة صحية ترسل القراءات إلى الفريق الصحي">
+  <rect width="640" height="220" fill="#f3faf8"/>
+  <g transform="translate(520,110)"><rect x="-26" y="-90" width="52" height="180" rx="14" fill="#0b3b40"/><rect class="z-watch" x="-46" y="-46" width="92" height="92" rx="20" fill="#0e7c7b" stroke="#0b3b40" stroke-width="3"/>
+  <text y="-6" text-anchor="middle" font-size="22" fill="#fff">♥</text><text y="26" text-anchor="middle" font-size="20" font-weight="700" fill="#d9f2ee"><tspan class="hr-ok">78</tspan><tspan class="bad-hr">135</tspan></text></g>
+  <path class="z-remote link" d="M460 110 C380 40 280 40 200 100" fill="none" stroke="#9cbab6" stroke-width="5"/>
+  <text x="330" y="40" text-anchor="middle" font-size="14" fill="#5b7376">إرسال القراءات عبر الشبكة</text>
+  <g transform="translate(120,120)"><rect x="-80" y="-62" width="160" height="124" rx="14" fill="#fff" stroke="#0b3b40" stroke-width="3"/>
+  <text y="-30" text-anchor="middle" font-size="14" font-weight="700" fill="#0b3b40">الفريق الصحي</text>
+  <polyline points="-60,10 -35,10 -25,-14 -12,28 0,0 60,0" fill="none" stroke="#0e7c7b" stroke-width="3"/>
+  <rect class="z-alert" x="-66" y="34" width="132" height="22" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/><text y="50" text-anchor="middle" font-size="12" fill="#c0392b">تنبيه: قراءة مرتفعة</text></g>
+</svg>`,
+phone: `<svg viewBox="0 0 640 260" role="img" aria-label="تطبيق يطلب موافقة المستخدم على جمع بياناته ويشفرها أثناء نقلها">
+  <rect width="640" height="260" fill="#f3faf8"/>
+  <g transform="translate(470,130)"><rect x="-80" y="-120" width="160" height="240" rx="24" fill="#0b3b40"/><rect x="-70" y="-104" width="140" height="208" rx="12" fill="#fff"/>
+  <rect class="z-consent" x="-62" y="-92" width="124" height="184" rx="10" fill="#fff" stroke="#d5e3e1" stroke-width="2"/>
+  <text y="-68" text-anchor="middle" font-size="12" font-weight="700" fill="#0b3b40">تطبيق اللياقة يطلب:</text>
+  <text x="50" y="-40" font-size="12" fill="#0f2a2e">☑ معدل النبض</text><text x="50" y="-16" font-size="12" fill="#0f2a2e">☑ عدد الخطوات</text><text x="50" y="8" font-size="12" fill="#0f2a2e">☐ جهات الاتصال</text>
+  <text y="36" text-anchor="middle" font-size="11" fill="#5b7376">الغرض: متابعة نشاطك</text>
+  <rect x="-54" y="56" width="50" height="24" rx="8" fill="#0e7c7b"/><text x="-29" y="73" text-anchor="middle" font-size="12" fill="#fff">موافقة</text>
+  <rect x="4" y="56" width="50" height="24" rx="8" fill="#fff" stroke="#0e7c7b"/><text x="29" y="73" text-anchor="middle" font-size="12" fill="#0e7c7b">رفض</text></g>
+  <path class="link" d="M380 130 L170 130" stroke="#9cbab6" stroke-width="5"/>
+  <g class="lockon"><circle cx="275" cy="130" r="26" fill="#1e8e5a"/><text x="275" y="140" text-anchor="middle" font-size="24">🔒</text><text x="275" y="182" text-anchor="middle" font-size="13" fill="#1e8e5a" font-weight="700">بيانات مشفّرة أثناء النقل</text></g>
+  <g transform="translate(110,130)"><rect x="-60" y="-50" width="120" height="100" rx="14" fill="#d9f2ee"/><text y="-6" text-anchor="middle" font-size="30">🗄️</text><text y="30" text-anchor="middle" font-size="13" fill="#0b3b40">خادم التخزين</text></g>
+</svg>`,
+camera: `<svg viewBox="0 0 600 300" role="img" aria-label="كاميرا مراقبة ذكية فيها نقطتا ضعف: كلمة مرور افتراضية وبرنامج ثابت قديم">
+  <rect width="600" height="300" fill="#eef5f4"/><rect x="0" y="0" width="60" height="300" fill="#d5e3e1"/>
+  <rect x="60" y="120" width="70" height="20" fill="#7fa9a5"/>
+  <rect x="130" y="80" width="260" height="110" rx="40" fill="#fff" stroke="#0b3b40" stroke-width="4"/>
+  <circle cx="390" cy="135" r="46" fill="#0b3b40"/><circle cx="390" cy="135" r="26" fill="#0e7c7b"/><circle cx="398" cy="127" r="8" fill="#d9f2ee"/>
+  <circle cx="160" cy="110" r="6" fill="#c0392b"/>
+  <rect class="z-pw" x="170" y="150" width="170" height="30" rx="6" fill="#fff8e6" stroke="#c0392b" stroke-width="3"/>
+  <text x="255" y="171" text-anchor="middle" font-size="14" fill="#0f2a2e"><tspan class="pw-bad">🔑 admin / admin</tspan><tspan class="pw-good">🔑 •••••••• ✓</tspan></text>
+  <rect class="z-fw" x="170" y="225" width="250" height="44" rx="10" fill="#fff" stroke="#c0392b" stroke-width="3"/>
+  <text x="295" y="253" text-anchor="middle" font-size="14" fill="#0f2a2e"><tspan class="fw-bad">⚠ البرنامج الثابت: إصدار قديم 1.0</tspan><tspan class="fw-good">✓ البرنامج الثابت: آخر إصدار</tspan></text>
+  <line x1="260" y1="190" x2="260" y2="225" stroke="#9cbab6" stroke-width="3" stroke-dasharray="4 4"/>
+  <text x="500" y="60" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3b40">كاميرا مراقبة</text><text x="500" y="82" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3b40">متصلة بالشبكة</text>
+</svg>`
+};
+
+/* =========================================================
+   المحتوى: أربع وحدات تعلم (RLOs)
+   ========================================================= */
+const UNITS = [
+ {k:1, code:'RLO1', title:'مفهوم إنترنت الأشياء', time:'7 دقائق',
+  lo:'أن يعرّف المتعلم إنترنت الأشياء، ويميّز مكونات نظامه الأربعة، ويرتّب مراحل عمله، ويصنّف الأجهزة إلى أجهزة إنترنت أشياء وأجهزة تقليدية.',
+  keys:['s13q0','s13q1','s13q2','s14'],
+  sum:['إنترنت الأشياء شبكة من الأجهزة المادية المتصلة بالإنترنت، تجمع البيانات وتتبادلها دون تدخل بشري مباشر.','مكونات النظام: الأجهزة والمستشعرات، شبكات الاتصال، معالجة البيانات، واجهة المستخدم.','يعمل النظام بالترتيب: جمع ← نقل ← تحليل ← إجراء تلقائي.']},
+ {k:2, code:'RLO2', title:'تطبيقات إنترنت الأشياء', time:'6 دقائق',
+  lo:'أن يحدّد المتعلم تطبيقات إنترنت الأشياء في المنزل وبيئات التعلم والصحة، ويميّز التطبيق المباشر لإنترنت الأشياء من غيره.',
+  keys:['s24'],
+  sum:['المنزل الذكي: إضاءة وتكييف وأمان تُدار عن بُعد وترشّد الطاقة.','بيئات التعلم: فصل ذكي، وحضور آلي ببطاقات RFID، وإدارة للطاقة.','الصحة: ساعات صحية، ومراقبة عن بُعد، وتنبيهات طوارئ.']},
+ {k:3, code:'RLO3', title:'تصميم أنظمة إنترنت الأشياء', time:'8 دقائق',
+  lo:'أن يطبّق المتعلم مراحل تصميم نظام إنترنت الأشياء ومعايير التصميم الجيد، فيختار المكونات المناسبة لمدرسة ذكية ويتخذ قراراً تصميمياً سليماً.',
+  keys:['s33','s340'],
+  sum:['مراحل التصميم: تحديد المشكلة، تحديد المتطلبات، اختيار الأجهزة والمستشعرات، اختبار الحل.','معايير التصميم الجيد: الأمان السيبراني، سهولة الاستخدام، قابلية التوسع، كفاءة الطاقة.','إدارة فترات الإرسال تحافظ على البطاريات دون إيقاف النظام.']},
+ {k:4, code:'RLO4', title:'الأخلاقيات والأمن', time:'7 دقائق',
+  lo:'أن يتخذ المتعلم قرارات مسؤولة تحمي خصوصية البيانات وأمن الأجهزة المتصلة في مواقف واقعية.',
+  keys:['s440','s441'],
+  sum:['الخصوصية تُحمى بالموافقة المستنيرة وتشفير البيانات أثناء نقلها وتخزينها.','تغيير كلمات المرور الافتراضية وتحديث البرامج الثابتة يغلقان أشهر الثغرات.','تُستخدم البيانات فيما جُمعت من أجله فقط، ولا تُشارك دون تصريح.']}
+];
+
+const S = [
+ {id:'cover', kind:'cover', nav:'الغلاف'},
+ {id:'guide', kind:'guide', nav:'التعليمات'},
+ {id:'menu',  kind:'menu',  nav:'القائمة الرئيسة'},
+
+ /* ---------- RLO1 ---------- */
+ {id:'s11', u:1, kind:'keywords', nav:'S1.1 ما إنترنت الأشياء؟', title:'ما إنترنت الأشياء؟', type:'كشف الكلمات المفتاحية',
+  parts:['إنترنت الأشياء (IoT) شبكة من ',{k:'الأجهزة والأدوات المادية'},' ',{k:'المتصلة بالإنترنت'},'، ',{k:'تجمع البيانات وتتبادلها'},' ',{k:'دون تدخل بشري مباشر'},'.'],
+  btn:'استكشف التعريف', fb:'أحسنت! إنترنت الأشياء هو الجسر الذي يربط العالم الفيزيائي بالعالم الرقمي.'},
+
+ {id:'s12', u:1, kind:'cardsModal', nav:'S1.2 مكونات النظام', title:'مكونات نظام إنترنت الأشياء', type:'بطاقات تفاعلية + صورة تفاعلية',
+  lead:'يتكون أي نظام لإنترنت الأشياء من أربعة مكونات أساسية.', hint:'اضغط على كل بطاقة لمعرفة المزيد',
+  img:()=>IMG.pipe([{ic:'🌡️',t:'الأجهزة والمستشعرات'},{ic:'📶',t:'شبكات الاتصال'},{ic:'☁️',t:'معالجة البيانات'},{ic:'📱',t:'واجهة المستخدم'}]),
+  items:[
+   {ic:'🌡️',t:'الأجهزة والمستشعرات',d:'تقيس ما حولها، مثل الحرارة والحركة، وتحوله إلى بيانات.',ex:'مستشعر نبض القلب في الساعة الذكية.'},
+   {ic:'📶',t:'شبكات الاتصال',d:'تنقل البيانات من الجهاز إلى مكان معالجتها.',ex:'شبكة Wi-Fi أو البلوتوث.'},
+   {ic:'☁️',t:'معالجة البيانات',d:'تحلل البيانات وتستخرج منها القرار.',ex:'منصة سحابية تقارن القراءة بالحد المسموح.'},
+   {ic:'📱',t:'واجهة المستخدم',d:'تعرض النتائج وتتيح التحكم.',ex:'تطبيق على الجوال.'}],
+  fb:'رائع! استكشفت جميع مكونات النظام.'},
+
+ {id:'s13', u:1, kind:'stepper', nav:'S1.3 كيف يعمل؟', title:'كيف يعمل إنترنت الأشياء؟', type:'إنفوجرافيك متدرج بأسئلة توقف',
+  lead:'تابع مراحل عمل النظام. يتوقف الإنفوجرافيك بعد كل مرحلة لتجيب عن سؤال قبل المتابعة.',
+  stages:[{ic:'🌡️',t:'جمع البيانات بالمستشعرات',d:'يرصد المستشعر ارتفاع الحرارة في الغرفة.'},
+          {ic:'📡',t:'نقل البيانات عبر الشبكة',d:'يرسل المستشعر القراءة عبر الشبكة.'},
+          {ic:'☁️',t:'تحليل البيانات في السحابة',d:'تقارن المنصة السحابية القراءة بالحد المسموح.'},
+          {ic:'❄️',t:'اتخاذ الإجراء التلقائي',d:'يصدر النظام أمراً بتشغيل التكييف.'}],
+  qs:[{q:'ما الخطوة التالية للبيانات؟',o:['نقلها عبر الشبكة','تشغيل التكييف مباشرة'],a:0},
+      {q:'أين تُحلَّل البيانات؟',o:['في المستشعر','في السحابة'],a:1},
+      {q:'ماذا يحدث بعد التحليل؟',o:['يتخذ النظام الإجراء تلقائياً','تُحذف البيانات'],a:0}],
+  ok:'صحيح! انتقل إلى المرحلة التالية.',
+  no:'ليس بعد. تذكّر أن البيانات تُجمع، ثم تُنقل، ثم تُحلَّل، ثم يُتخذ الإجراء.',
+  fb:'ممتاز! البيانات هي شريان الحياة في اتخاذ القرارات الذكية.'},
+
+ {id:'s14', u:1, kind:'classify', nav:'S1.4 نشاط: صنّف الأجهزة', title:'نشاط: صنّف الأجهزة', type:'سحب وإفلات (تصنيف) · تقويم',
+  hint:'اسحب كل عنصر إلى المجموعة المناسبة (أو اضغط على العنصر ثم على المجموعة)',
+  bins:['أجهزة إنترنت الأشياء','أجهزة تقليدية'],
+  items:[{t:'⌚ ساعة ذكية',b:0},{t:'💡 مصباح عادي',b:1},{t:'🧊 ثلاجة ذكية',b:0},{t:'📖 كتاب ورقي',b:1}],
+  ok:'إجابة ممتازة! الساعة والثلاجة الذكية تحتويان على مستشعرات واتصال بالشبكة، بعكس المصباح والكتاب الورقي.',
+  no:'حاول مرة أخرى! الأجهزة الذكية تتميز بوجود مستشعرات وإمكانية تبادل البيانات عبر الإنترنت.'},
+ {id:'end1', u:1, kind:'unitEnd', nav:'ختام الوحدة الأولى'},
+
+ /* ---------- RLO2 ---------- */
+ {id:'s21', u:2, kind:'hotspot', nav:'S2.1 المنازل الذكية', title:'إنترنت الأشياء في المنازل الذكية', type:'صورة تفاعلية (نقاط ساخنة)',
+  lead:'تربط المنازل الذكية الأجهزة بالإنترنت للتحكم بها ومتابعتها عن بُعد.', hint:'اضغط على الغرف لاكتشاف التقنية المستخدمة',
+  img:()=>IMG.house, cap:'مخطط منزل ذكي (رسم توضيحي أصلي)',
+  spots:[{x:27,y:30,cls:'on-living',t:'💡 الإضاءة الذكية',d:'تعمل الإضاءة حسب الحاجة وتنطفئ في الغرف الفارغة.'},
+         {x:62,y:22,cls:'on-bed',t:'❄️ التحكم بالتكييف',d:'يضبط درجة الحرارة تلقائياً ويرشّد الطاقة.'},
+         {x:88,y:62,cls:'on-door',t:'🚨 الأمان والإنذار',d:'يرسل تنبيهاً إلى الجوال عند اكتشاف خطر.'}],
+  fb:'رائع! تعمل هذه التطبيقات على ترشيد الطاقة وزيادة الأمان.'},
+
+ {id:'s22', u:2, kind:'hover', nav:'S2.2 بيئات التعلم', title:'إنترنت الأشياء في بيئات التعلم', type:'صورة تفاعلية (تمرير المؤشر)',
+  lead:'تسهم الأجهزة المتصلة في رفع كفاءة البيئة الصفية وتقليل العمل الإداري.', hint:'مرّر المؤشر على التجهيزات داخل الفصل (أو اضغط عليها)',
+  img:()=>IMG.classroom, cap:'فصل ذكي (رسم توضيحي أصلي)',
+  spots:[{x:32,y:40,cls:'cls-board',t:'الفصل الذكي',d:'سبورة تفاعلية وإضاءة وتكييف تعمل حسب حالة القاعة.'},
+         {x:70,y:63,cls:'cls-door',t:'الحضور الآلي',d:'تسجيل حضور الطلاب ببطاقات RFID عند دخول القاعة.'},
+         {x:60,y:11,cls:'cls-power',t:'إدارة الطاقة',d:'إطفاء الأجهزة في القاعات غير المستخدمة.'}],
+  fb:'أحسنت! ترفع هذه التقنيات كفاءة البيئة الصفية وتختصر وقت العمل الإداري.'},
+
+ {id:'s23', u:2, kind:'flip', nav:'S2.3 الصحة', title:'إنترنت الأشياء في الصحة', type:'بطاقات قلّابة + صورة تفاعلية',
+  lead:'تتيح الأجهزة المتصلة متابعة المؤشرات الصحية وإرسال البيانات إلى المختصين عن بُعد.', hint:'اضغط على البطاقات لمعرفة المزيد',
+  img:()=>IMG.watch, cap:'ساعة صحية متصلة بالفريق الصحي (رسم توضيحي أصلي)',
+  items:[{ic:'⌚',t:'الساعات الصحية',d:'تتبع النشاط وبعض المؤشرات الحيوية.',cls:'w-watch'},
+         {ic:'📡',t:'المراقبة عن بُعد',d:'إرسال قراءات الأجهزة إلى الفريق الصحي.',cls:'w-remote'},
+         {ic:'🚑',t:'تنبيهات الطوارئ',d:'التنبيه عند رصد قراءات تستدعي المتابعة.',cls:'w-alert'}],
+  fb:'صحيح! يسهم إنترنت الأشياء في متابعة الحالات الصحية بسرعة ودقة.'},
+
+ {id:'s24', u:2, kind:'quiz', nav:'S2.4 اختبار قصير', title:'اختبار قصير', type:'اختيار من متعدد · تقويم', btn:'تحقق من الإجابة',
+  qs:[{s:'سؤال', q:'أي مما يلي يُعد تطبيقاً مباشراً لإنترنت الأشياء؟',
+    wrong:'إجابة غير دقيقة! تطبيق إنترنت الأشياء يحتاج جهازاً فيه مستشعرات ويتصل بالشبكة.',
+    o:[{t:'كتاب ورقي'},{t:'ساعة ذكية متصلة بالتطبيق والشبكة',ok:1,f:'إجابة صحيحة! الساعة الذكية تجمع البيانات الحيوية وترسلها إلى تطبيق سحابي.'},{t:'سبورة خشبية تقليدية'},{t:'قلم رصاص'}]}]},
+ {id:'end2', u:2, kind:'unitEnd', nav:'ختام الوحدة الثانية'},
+
+ /* ---------- RLO3 ---------- */
+ {id:'s31', u:3, kind:'reveal', nav:'S3.1 مراحل تصميم النظام', title:'مراحل تصميم النظام', type:'خط عملية تفاعلي',
+  lead:'يمر تصميم أي نظام لإنترنت الأشياء بأربع مراحل.', hint:'اضغط على كل مرحلة لإظهار مهامها', numbered:true, steps:true,
+  items:[{ic:'🎯',t:'تحديد المشكلة',q:'ما الذي نريد حله؟',m:'<b>في مثال المدرسة:</b> قاعات المدرسة حارة.'},
+         {ic:'📋',t:'تحديد المتطلبات',q:'ماذا نقيس؟ ومن يستلم البيانات؟',m:'<b>في مثال المدرسة:</b> نقيس الحرارة وجودة الهواء.'},
+         {ic:'🔧',t:'اختيار الأجهزة والمستشعرات',q:'المكونات المناسبة للمشكلة.',m:'<b>في مثال المدرسة:</b> مستشعرات وبوابة وتطبيق.'},
+         {ic:'🧪',t:'اختبار الحل وتجربته',q:'تجربة النظام قبل تعميمه.',m:'<b>في مثال المدرسة:</b> تجربة في قاعة واحدة قبل التعميم.'}],
+  fb:'أحسنت! اطلعت على المراحل الأربع: مشكلة ← متطلبات ← أجهزة ← اختبار.'},
+
+ {id:'s32', u:3, kind:'reveal', nav:'S3.2 معايير التصميم الجيد', title:'معايير التصميم الجيد', type:'بطاقات تفاعلية',
+  lead:'استكشف معايير النظام الناجح.', hint:'اضغط على كل معيار لمعرفة التوصية التصميمية',
+  items:[{ic:'🔒',t:'الأمان السيبراني',q:'حماية الأجهزة والبيانات.',m:'<b>التوصية:</b> غيّر كلمات المرور الافتراضية، وحدّث البرامج الثابتة، وشفّر البيانات.'},
+         {ic:'🖐️',t:'سهولة الاستخدام',q:'واجهة واضحة وتحكم بسيط.',m:'<b>التوصية:</b> اعرض القراءات في واجهة واضحة، واجعل التحكم بخطوات قليلة.'},
+         {ic:'📈',t:'قابلية التوسع',q:'إضافة أجهزة جديدة عند الحاجة.',m:'<b>التوصية:</b> اختر بوابة ومنصة تسمحان بإضافة مستشعرات جديدة دون إعادة بناء النظام.'},
+         {ic:'🔋',t:'كفاءة استهلاك الطاقة',q:'تقليل استهلاك البطاريات.',m:'<b>التوصية:</b> اضبط الإرسال عند تغيّر القراءات أو في فترات محددة.'}],
+  fb:'ممتاز! مراعاة الكفاءة والأمان تضمن استدامة النظام.'},
+
+ {id:'s33', u:3, kind:'build', nav:'S3.3 نشاط: صمّم المدرسة الذكية', title:'صمّم نظام المدرسة الذكية', type:'سحب وإفلات (بناء نظام) · تقويم',
+  lead:'مدرسة ترغب في مراقبة جودة الهواء والحرارة في القاعات الدراسية.', hint:'اسحب المكونات المناسبة إلى لوحة النظام (أو اضغط عليها لنقلها)',
+  parts:[{t:'🌡️ مستشعر هواء وحرارة',ok:1},{t:'💡 مصباح عادي',ok:0},{t:'📡 بوابة اتصال (Gateway)',ok:1},{t:'📖 كتاب ورقي',ok:0},{t:'📱 تطبيق جوال',ok:1}],
+  done:()=>IMG.pipe([{ic:'🌡️',t:'مستشعر هواء وحرارة',s:'يقيس في القاعة'},{ic:'📡',t:'بوابة اتصال',s:'تنقل القراءات'},{ic:'📱',t:'تطبيق جوال',s:'يعرض النتائج'}]),
+  ok:'تركيب موثوق! اخترت المكونات المتناسبة مع احتياج المدرسة.',
+  no:'راجع اختيارك. المصباح العادي والكتاب الورقي لا يقيسان ولا يتصلان بالشبكة.'},
+
+ {id:'s34', u:3, kind:'quiz', nav:'S3.4 اتخذ القرار المناسب', title:'اتخذ القرار المناسب', type:'سيناريو اتخاذ قرار · تقويم', btn:'تأكيد القرار',
+  qs:[{s:'الموقف', q:'لاحظت أن بطاريات مستشعرات المدرسة تفرغ خلال أيام قليلة. ما القرار الأنسب؟',
+    o:[{t:'إلغاء إرسال البيانات نهائياً.',f:'هذا القرار يوقف النظام عن عمله. المطلوب تقليل الإرسال لا إلغاؤه.'},
+       {t:'ضبط الإرسال عند تغير القراءات أو في فترات محددة.',ok:1,f:'قرار تصميمي ممتاز! إدارة فترات الإرسال تحافظ على الطاقة وتضمن الاستدامة.'},
+       {t:'تبديل البطاريات يومياً.',f:'حل مكلف وغير مستدام. المشكلة في برمجة الإرسال لا في البطاريات.'}]}]},
+ {id:'end3', u:3, kind:'unitEnd', nav:'ختام الوحدة الثالثة'},
+
+ /* ---------- RLO4 ---------- */
+ {id:'s41', u:4, kind:'reveal', nav:'S4.1 الخصوصية وسرية البيانات', title:'حماية الخصوصية وسرية البيانات', type:'بطاقات تفاعلية + صورة تفاعلية',
+  lead:'تجمع الأجهزة المتصلة بيانات شخصية، مما يستلزم حمايتها واحترام خصوصية المستخدم.', hint:'استكشف ممارسات حماية الخصوصية',
+  img:()=>IMG.phone, cap:'طلب موافقة وتشفير البيانات (رسم توضيحي أصلي)',
+  items:[{ic:'✍️',t:'الموافقة المستنيرة',q:'هل يعرف المستخدم ما يُجمع عنه؟',m:'توضيح البيانات التي ستُجمع والغرض من استخدامها، والحصول على موافقة المستخدم.',cls:'p-consent'},
+         {ic:'🔐',t:'تشفير البيانات',q:'كيف تبقى البيانات سرية؟',m:'حماية البيانات أثناء نقلها وتخزينها.',cls:'p-enc'}],
+  fb:'الخصوصية حق أصيل للمستخدم لا يمكن التنازل عنه.'},
+
+ {id:'s42', u:4, kind:'hotspot', nav:'S4.2 الأمن السيبراني', title:'الأمن السيبراني في إنترنت الأشياء', type:'صورة تفاعلية (اكتشف الثغرة وأغلقها)',
+  lead:'قد تتعرض الأجهزة المتصلة للاختراق، وتساعد إجراءات الحماية في تقليل المخاطر.', hint:'اضغط على نقطة الضعف لمعرفة الحماية المناسبة',
+  img:()=>IMG.camera, cap:'كاميرا مراقبة ذكية (رسم توضيحي أصلي)', keep:true,
+  spots:[{x:57,y:55,cls:'fixed-pw',t:'نقطة ضعف: كلمة مرور افتراضية',d:'<b>الحماية المناسبة:</b> تغيير كلمات المرور الافتراضية.'},
+         {x:73,y:82,cls:'fixed-fw',t:'نقطة ضعف: برنامج قديم غير محدّث',d:'<b>الحماية المناسبة:</b> تحديث البرامج الثابتة دورياً.'}],
+  fb:'أحسنت! التأمين المستمر يغلق الثغرات أمام المخاطر السيبرانية.'},
+
+ {id:'s43', u:4, kind:'reveal', nav:'S4.3 المسؤولية والاستخدام الرشيد', title:'المسؤولية والاستخدام الرشيد', type:'بطاقات تفاعلية',
+  lead:'استخدم البيانات المجمعة للأغراض المحددة، مع احترام حقوق الأفراد والالتزام بالقوانين.', hint:'استكشف مبادئ المسؤولية الرقمية',
+  items:[{ic:'🤝',t:'احترام الحقوق',q:'المبدأ الأول',m:'حماية خصوصية الأفراد وبياناتهم.'},
+         {ic:'🎯',t:'الالتزام بالغرض',q:'المبدأ الثاني',m:'استخدام البيانات فيما جُمعت من أجله فقط.'},
+         {ic:'🛡️',t:'الاستخدام المسؤول',q:'المبدأ الثالث',m:'تجنب مشاركة البيانات دون تصريح.'}],
+  fb:'أحسنت! هذه المبادئ الثلاثة أساس المسؤولية الرقمية.'},
+
+ {id:'s44', u:4, kind:'quiz', nav:'S4.4 تقويم: ماذا تفعل؟', title:'تقويم: ماذا تفعل في هذا الموقف؟', type:'سيناريو متفرع · تقويم', btn:'تأكيد الإجابة', seq:true,
+  qs:[{s:'الموقف 1', q:'طلب تطبيق ساعة ذكية مشاركة بياناتك الصحية مع جهة إعلانية مقابل مزايا إضافية. ما القرار الأنسب؟',
+       wrong:'راجع ما يجمعه التطبيق من بيانات ولمن يرسلها، ثم أعد المحاولة.',
+       o:[{t:'الموافقة فوراً.'},{t:'رفض المشاركة ومراجعة أذونات التطبيق.',ok:1,f:'قرار صحيح! مشاركة البيانات الصحية مع جهة إعلانية انتهاك للخصوصية، ومراجعة الأذونات تحمي بياناتك.'},{t:'تجاهل الطلب دون تغيير الإعدادات.'}]},
+      {s:'الموقف 2', q:'ركّبت المدرسة كاميرات مراقبة ذكية ما زالت تعمل بكلمة المرور الافتراضية. ما الإجراء الأول؟',
+       wrong:'فكّر في الثغرة التي يمكن أن يستغلها المخترق أولاً، ثم أعد المحاولة.',
+       o:[{t:'تشغيلها كما هي.'},{t:'تغيير كلمة المرور وتحديث البرامج الثابتة قبل ربطها بالشبكة.',ok:1,f:'قرار صحيح! كلمات المرور الافتراضية والبرامج غير المحدّثة من أكثر الثغرات استغلالاً.'},{t:'فصلها عن الإنترنت نهائياً.'}]}]},
+ {id:'end4', u:4, kind:'unitEnd', nav:'ختام الوحدة الرابعة'},
+
+ {id:'final', kind:'final', nav:'الخلاصة ونتيجتك'},
+ {id:'refs',  kind:'refs',  nav:'المراجع'}
+];
+
+/* =========================================================
+   الحالة (تُحفظ في المتصفح إن أمكن)
+   ========================================================= */
+const KEY='iot-rlo-progress-v1';
+let ST={done:[],first:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.done) ST=s;}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
+const isDone=id=>ST.done.includes(id);
+function finish(id){ if(!isDone(id)){ST.done.push(id); save();} paintNav(); }
+function attempt(key,ok){ if(!(key in ST.first)){ST.first[key]=ok; save();} }
+const lessons=S.filter(s=>s.u&&s.kind!=='unitEnd');
+const unitLessons=k=>lessons.filter(s=>s.u===k);
+
+let cur=0;
+const $=(q,r=document)=>r.querySelector(q);
+const el=(t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+const L=['أ','ب','ج','د'];
+
+/* =========================================================
+   التنقل
+   ========================================================= */
+function paintNav(){
+  const nav=$('#nav'); nav.innerHTML=''; let lastU=-1;
+  S.forEach((s,i)=>{
+    const u=s.u||0;
+    if(u!==lastU){ nav.append(el('h4','', u?`الوحدة ${['','الأولى','الثانية','الثالثة','الرابعة'][u]} (${UNITS[u-1].code}): ${UNITS[u-1].title}`: (i===0?'البداية':'الختام'))); lastU=u; }
+    const b=el('button',(i===cur?'on ':'')+(isDone(s.id)?'done':''),`<span class="dot">${isDone(s.id)?'✓':''}</span><span>${s.nav}</span>`);
+    if(i===cur) b.setAttribute('aria-current','page');
+    b.onclick=()=>go(i); nav.append(b);
+  });
+  const n=lessons.filter(s=>isDone(s.id)).length;
+  $('#barFill').style.width=(n/lessons.length*100)+'%';
+  $('#barLbl').textContent=`أنجزت ${n} من ${lessons.length} شاشة تعليمية`;
+}
+function go(i,push=true){
+  i=Math.max(0,Math.min(S.length-1,i)); cur=i;
+  const s=S[i], m=$('#main'); m.innerHTML='';
+  if(s.u && s.kind!=='unitEnd'){
+    const U=UNITS[s.u-1], list=unitLessons(s.u), pos=list.indexOf(s)+1;
+    m.append(el('div','unitbar',`<span><b>${U.code}</b> · ${U.title}</span><span>الشاشة ${pos} من ${list.length}</span><span class="lo"><b>ناتج التعلم:</b> ${U.lo}</span>`));
+  }
+  R[s.kind](s,m);
+  const p=el('div','pager');
+  const prev=el('button','btn ghost','→ السابق'); prev.onclick=()=>go(i-1); prev.style.visibility=i?'visible':'hidden';
+  const next=el('button','btn',i===0?'ابدأ ←':'التالي ←'); next.onclick=()=>go(i+1); next.style.visibility=i<S.length-1?'visible':'hidden';
+  p.append(prev,next); m.append(p);
+  if(['cover','guide','menu','refs'].includes(s.kind)) finish(s.id);
+  paintNav(); $('#side').classList.remove('show');
+  if(push) history.replaceState(null,'','#'+s.id);
+  window.scrollTo(0,0); m.focus({preventScroll:true});
+}
+function head(s,m){
+  m.append(el('span','tag',`${s.nav.split(' ')[0]} · ${s.type}`));
+  m.append(el('h1','',s.title));
+  if(s.lead) m.append(el('p','lead',s.lead));
+}
+const hint=t=>el('div','hint',t);
+const fbBox=(t,ok=true)=>el('div','fb '+(ok?'ok':'no'),t);
+function media(svg,cap){const d=el('div','media',svg); if(cap) d.append(el('div','cap',cap)); return d;}
+
+/* =========================================================
+   أنماط الشاشات
+   ========================================================= */
+const R={};
+
+R.cover=(s,m)=>{
+  m.append(el('div','cover',`
+   <span class="tag">مسار تعلم رقمي تفاعلي · أربع وحدات تعلم صغيرة قابلة لإعادة الاستخدام (RLOs)</span>
+   <h1>إنترنت الأشياء: من المفهوم إلى الاستخدام المسؤول</h1>
+   <p class="lead">تعرّف إنترنت الأشياء ومكوناته، واكتشف تطبيقاته في المنزل والمدرسة والصحة، وصمّم نظاماً لمدرسة ذكية، ثم احمِ البيانات والأجهزة.</p>
+   <div class="media">${IMG.things}</div>
+   <div class="box" style="margin:6px 0"><b>الفئة المستهدفة:</b> طلاب المرحلة الثانوية · <b>المدة التقريبية:</b> 28 دقيقة (أربع وحدات)<br>
+   <b>إعداد:</b> أكرم العنزي · أحمد الفالح · زياد الشهري · محمد الأنصاري</div>
+   <div class="meta">مقرر ممارسات متقدمة في تطوير المحتوى الإلكتروني · الماجستير المهني في تصميم التعليم والتكنولوجيا · جامعة الأميرة نورة بنت عبدالرحمن</div>`));
+};
+
+R.guide=(s,m)=>{
+  m.append(el('span','tag','قبل أن تبدأ'),el('h1','','تعليمات استخدام المنتج'));
+  m.append(el('div','box',`<ul class="goals">
+   <li>يتكون المسار من أربع وحدات، ولكل وحدة ناتج تعلم يظهر أعلى كل شاشة من شاشاتها.</li>
+   <li>كل وحدة مستقلة: يمكنك البدء بأي وحدة من القائمة الرئيسة، أو فتحها مباشرة برابطها (مثل <b>#rlo3</b>).</li>
+   <li>تنقّل بزرّي <b>التالي</b> و<b>السابق</b> أسفل الشاشة، أو من قائمة المحتويات الجانبية.</li>
+   <li>ابحث عن العبارة المسبوقة بـ 👆؛ فهي تخبرك بما تفعله في كل شاشة.</li>
+   <li>تظهر التغذية الراجعة فوراً: <span style="color:#1e8e5a;font-weight:700">الأخضر</span> للإجابة الصحيحة، و<span style="color:#c0392b;font-weight:700">الأحمر</span> مع توضيح يساعدك على المحاولة من جديد.</li>
+   <li>يُحفظ تقدّمك في هذا المتصفح، وتظهر نتيجتك في ختام كل وحدة وفي الخلاصة.</li></ul>`));
+  m.append(el('h3','','أنماط التفاعل في المسار'));
+  m.append(el('div','legend',`<div>🔍 كشف الكلمات المفتاحية</div><div>🃏 بطاقات تفاعلية وقلّابة</div><div>🖼️ صور تفاعلية بنقاط ساخنة</div><div>📊 إنفوجرافيك بأسئلة توقف</div><div>✋ سحب وإفلات (تصنيف وبناء نظام)</div><div>🧭 سيناريوهات اتخاذ القرار</div><div>✅ اختيار من متعدد</div>`));
+};
+
+R.menu=(s,m)=>{
+  m.append(el('span','tag','القائمة الرئيسة'),el('h1','','اختر الوحدة التي تبدأ بها'));
+  m.append(el('p','lead','الوحدات مرتبة في مسار متكامل، لكن كل وحدة تعمل بصورة مستقلة.'));
+  const g=el('div','units');
+  UNITS.forEach(U=>{
+    const list=unitLessons(U.k), n=list.filter(x=>isDone(x.id)).length;
+    const c=el('div','ucard',`<span class="k">${U.code} · ${U.time} · ${list.length} شاشات</span><h3>${U.title}</h3><p>${U.lo}</p>
+      <div class="pr"><i style="width:${n/list.length*100}%"></i></div><small>${n} من ${list.length} مكتملة</small>`);
+    const b=el('button','btn',n===list.length?'مراجعة الوحدة':n?'متابعة الوحدة':'ابدأ الوحدة');
+    b.onclick=()=>go(S.indexOf(list.find(x=>!isDone(x.id))||list[0]));
+    c.append(b); g.append(c);
+  });
+  m.append(g);
+};
+
+/* S1.1 كشف الكلمات المفتاحية */
+R.keywords=(s,m)=>{
+  head(s,m);
+  const d=el('div','def'); s.parts.forEach(p=>d.append(typeof p==='string'?document.createTextNode(p):el('span','kw',p.k)));
+  const img=media(IMG.things,'أجهزة مادية متصلة بالإنترنت (رسم توضيحي أصلي)');
+  const fb=fbBox(s.fb), b=el('button','btn amber','🔍 '+s.btn);
+  b.onclick=()=>{ const ks=[...d.querySelectorAll('.kw')]; b.disabled=true;
+    ks.forEach((k,i)=>setTimeout(()=>{k.classList.add('lit'); if(i===ks.length-1){img.firstChild.classList.add('svgOn'); fb.classList.add('show'); finish(s.id);}},i*550)); };
+  m.append(d,el('div','row'),b,img,fb); m.querySelector('.row').append(b);
+  if(isDone(s.id)){d.querySelectorAll('.kw').forEach(k=>k.classList.add('lit')); img.firstChild.classList.add('svgOn'); fb.classList.add('show');}
+};
+
+/* S1.2 بطاقات بنافذة تفصيلية */
+R.cardsModal=(s,m)=>{
+  head(s,m); m.append(hint(s.hint));
+  const img=media(s.img()), g=el('div','grid'), fb=fbBox(s.fb), seen=new Set();
+  s.items.forEach((it,i)=>{
+    const t=el('button','tile',`<span class="ic">${it.ic}</span><b>${it.t}</b><span class="q">اضغط للتفاصيل</span>`);
+    t.onclick=()=>{ seen.add(i); t.classList.add('seen');
+      img.querySelectorAll('.node').forEach((n,j)=>n.classList.toggle('hl',j===i));
+      openModal(`<span style="font-size:2.2rem">${it.ic}</span><h2>${it.t}</h2><p>${it.d}</p><div class="ex"><b>مثال:</b> ${it.ex}</div>`,
+        ()=>{ if(seen.size===s.items.length){fb.classList.add('show'); finish(s.id);} t.focus(); }); };
+    g.append(t);
+  });
+  m.append(img,g,fb); if(isDone(s.id)) fb.classList.add('show');
+};
+function openModal(html,onClose){
+  const o=el('div','modal'), inn=el('div','in',html), c=el('button','btn','فهمت ✓');
+  o.setAttribute('role','dialog'); o.setAttribute('aria-modal','true');
+  const close=()=>{o.remove(); document.removeEventListener('keydown',esc); onClose&&onClose();};
+  const esc=e=>{if(e.key==='Escape')close();};
+  c.onclick=close; o.onclick=e=>{if(e.target===o)close();}; document.addEventListener('keydown',esc);
+  inn.append(c); o.append(inn); document.body.append(o); c.focus();
+}
+
+/* S1.3 إنفوجرافيك متدرج بأسئلة توقف */
+R.stepper=(s,m)=>{
+  head(s,m);
+  const row=el('div','stages'), cards=s.stages.map(st=>{const c=el('div','stage',`<span class="ic">${st.ic}</span><b>${st.t}</b>`); row.append(c); return c;});
+  const panel=el('div','panel'), qbox=el('div'), fin=fbBox(s.fb);
+  m.append(row,panel,qbox,fin);
+  let k=0;
+  const show=i=>{ k=i; cards.forEach((c,j)=>{c.classList.toggle('on',j<=i); c.classList.remove('cur');});
+    void cards[i].offsetWidth; cards[i].classList.add('cur');
+    panel.innerHTML=`<h3>المرحلة ${i+1}: ${s.stages[i].t}</h3>${s.stages[i].d}`;
+    qbox.innerHTML='';
+    if(i<s.qs.length) ask(i); else { panel.innerHTML+=`<p style="margin:8px 0 0"><b>مثال:</b> يرصد المستشعر ارتفاع الحرارة، فيرسل البيانات، ثم يصدر النظام أمراً بتشغيل التكييف.</p>`; fin.classList.add('show'); finish(s.id);} };
+  const ask=i=>{
+    const q=s.qs[i], b=el('div','box',`<h3>⏸ سؤال توقف</h3><b>${q.q}</b>`), opts=el('div','opts'), fb=el('div','fb');
+    const acts=el('div','row'), nx=el('button','btn','متابعة ←'), rp=el('button','btn ghost','↺ إعادة المرحلة');
+    nx.disabled=true; rp.onclick=()=>show(i); nx.onclick=()=>show(i+1);
+    q.o.forEach((t,j)=>{const o=el('button','opt',`<b>${L[j]})</b> ${t}`);
+      o.onclick=()=>{ if(nx.disabled===false) return; const ok=j===q.a; attempt(`s13q${i}`,ok);
+        [...opts.children].forEach(x=>x.classList.remove('wrong')); o.classList.add(ok?'right':'wrong');
+        fb.className='fb show '+(ok?'ok':'no'); fb.textContent=ok?s.ok:s.no; if(ok) nx.disabled=false; };
+      opts.append(o);});
+    acts.append(nx,rp); b.append(opts,fb,acts); qbox.append(b);
+  };
+  show(isDone(s.id)?s.stages.length-1:0);
+  if(isDone(s.id)) cards.forEach(c=>c.classList.add('on'));
+};
+
+/* سحب وإفلات عام: يدعم السحب بالفأرة والنقر (للمس ولوحة المفاتيح) */
+function dnd(zones,onChange){
+  let dragged=null, picked=null;
+  const move=(c,z)=>{ $('.chips',z).append(c); c.classList.remove('picked'); picked=null; zones.forEach(x=>x.classList.remove('armed')); onChange(); };
+  zones.forEach(z=>{
+    z.ondragover=e=>{e.preventDefault(); z.classList.add('over')};
+    z.ondragleave=()=>z.classList.remove('over');
+    z.ondrop=e=>{e.preventDefault(); z.classList.remove('over'); if(dragged) move(dragged,z); dragged=null;};
+    z.onclick=e=>{ if(picked && !e.target.closest('.chip')) move(picked,z); };
+  });
+  return {wire(c){ c.draggable=true; c.ondragstart=()=>{dragged=c};
+    c.onclick=e=>{ e.stopPropagation();
+      if(picked===c){c.classList.remove('picked'); picked=null; zones.forEach(x=>x.classList.remove('armed')); return;}
+      if(picked && picked.closest('.zone')!==c.closest('.zone')){ move(picked,c.closest('.zone')); return; }
+      if(picked) picked.classList.remove('picked');
+      picked=c; c.classList.add('picked'); zones.forEach(x=>x.classList.toggle('armed', x!==c.closest('.zone'))); }; }};
+}
+
+/* S1.4 تصنيف */
+R.classify=(s,m)=>{
+  head(s,m); m.append(hint(s.hint));
+  const pool=el('div','zone','<h3>العناصر</h3><div class="chips"></div>');
+  const bins=s.bins.map(b=>el('div','zone target',`<h3>${b}</h3><div class="chips"></div>`));
+  const wrap=el('div','dd'); const two=el('div','grid'); bins.forEach(b=>two.append(b)); wrap.append(pool,two);
+  const btn=el('button','btn','تحقق من الإجابة'), fb=el('div','fb'); btn.disabled=true;
+  const D=dnd([pool,...bins],()=>{ btn.disabled=$('.chips',pool).children.length>0; fb.className='fb'; wrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('good','bad')); });
+  s.items.forEach(it=>{const c=el('button','chip',it.t); c.dataset.b=it.b; D.wire(c); $('.chips',pool).append(c);});
+  btn.onclick=()=>{ let ok=true;
+    bins.forEach((z,bi)=>z.querySelectorAll('.chip').forEach(c=>{const g=+c.dataset.b===bi; c.classList.add(g?'good':'bad'); if(!g) ok=false;}));
+    attempt(s.id,ok); fb.className='fb show '+(ok?'ok':'no'); fb.textContent=ok?s.ok:s.no; if(ok) finish(s.id); };
+  m.append(wrap,el('div','row')); m.querySelector('.row').append(btn); m.append(fb);
+};
+
+/* S2.1 و S4.2 صورة تفاعلية بنقاط ساخنة (نقر) */
+R.hotspot=(s,m)=>{
+  head(s,m); m.append(hint(s.hint));
+  const box=media(s.img(),s.cap), svg=box.querySelector('svg'), panel=el('div','panel','<h3>اختر نقطة على الصورة</h3>'), fb=fbBox(s.fb), seen=new Set();
+  s.spots.forEach((p,i)=>{
+    const h=el('button','hs',String(i+1)); h.style.left=p.x+'%'; h.style.top=p.y+'%'; h.setAttribute('aria-label',p.t);
+    h.onclick=()=>{ seen.add(i); h.classList.add('seen'); box.querySelectorAll('.hs').forEach(x=>x.classList.toggle('cur',x===h));
+      if(s.keep) svg.classList.add(p.cls); else { s.spots.forEach(q=>svg.classList.remove(q.cls)); svg.classList.add(p.cls); }
+      panel.innerHTML=`<h3>${p.t}</h3>${p.d}`;
+      if(seen.size===s.spots.length){fb.classList.add('show'); finish(s.id);} };
+    box.append(h);
+  });
+  m.append(box,panel,fb); if(isDone(s.id)) fb.classList.add('show');
+};
+
+/* S2.2 صورة تفاعلية بتمرير المؤشر */
+R.hover=(s,m)=>{
+  head(s,m); m.append(hint(s.hint));
+  const box=media(s.img(),s.cap), svg=box.querySelector('svg'), tip=el('div','tip'), fb=fbBox(s.fb), seen=new Set();
+  tip.style.display='none'; box.append(tip);
+  const hide=()=>{tip.style.display='none'; s.spots.forEach(q=>svg.classList.remove(q.cls));};
+  s.spots.forEach((p,i)=>{
+    const h=el('button','hs',String(i+1)); h.style.left=p.x+'%'; h.style.top=p.y+'%'; h.setAttribute('aria-label',p.t);
+    const showTip=()=>{ hide(); svg.classList.add(p.cls); tip.innerHTML=`<b>${p.t}</b>${p.d}`; tip.style.display='block';
+      tip.style.top=`calc(${p.y}% + 26px)`; tip.style.left=p.x>55?'auto':`calc(${p.x}% - 20px)`; tip.style.right=p.x>55?`calc(${100-p.x}% - 20px)`:'auto';
+      seen.add(i); h.classList.add('seen'); if(seen.size===s.spots.length){fb.classList.add('show'); finish(s.id);} };
+    h.onmouseenter=showTip; h.onfocus=showTip; h.onclick=showTip; h.onmouseleave=hide; h.onblur=hide;
+    box.append(h);
+  });
+  m.append(box,fb); if(isDone(s.id)) fb.classList.add('show');
+};
+
+/* S2.3 بطاقات قلّابة */
+R.flip=(s,m)=>{
+  head(s,m); m.append(hint(s.hint));
+  const box=media(s.img(),s.cap), svg=box.querySelector('svg'), g=el('div','grid'), fb=fbBox(s.fb), seen=new Set();
+  s.items.forEach((it,i)=>{
+    const c=el('button','flip',`<div class="in"><div class="f"><span class="ic">${it.ic}</span><b>${it.t}</b><small>اضغط لقلب البطاقة</small></div><div class="b"><b style="color:#f2a516">${it.t}</b>${it.d}</div></div>`);
+    c.setAttribute('aria-pressed','false');
+    c.onclick=()=>{ const on=c.classList.toggle('on'); c.setAttribute('aria-pressed',on);
+      s.items.forEach(x=>svg.classList.remove(x.cls)); if(on) svg.classList.add(it.cls);
+      seen.add(i); if(seen.size===s.items.length){fb.classList.add('show'); finish(s.id);} };
+    g.append(c);
+  });
+  m.append(box,g,fb); if(isDone(s.id)) fb.classList.add('show');
+};
+
+/* S3.1 و S3.2 و S4.1 و S4.3 الكشف بالنقر */
+R.reveal=(s,m)=>{
+  head(s,m); m.append(hint(s.hint));
+  let svg=null; if(s.img){const b=media(s.img(),s.cap); svg=b.querySelector('svg'); m.append(b);}
+  const g=el('div',s.steps?'steps':'grid'), fb=fbBox(s.fb), seen=new Set();
+  s.items.forEach((it,i)=>{
+    const t=el('button','tile',`${s.numbered?`<span class="num">${i+1}</span>`:''}<span class="ic">${it.ic}</span><b>${it.t}</b><span class="q">${it.q}</span><span class="more">${it.m}</span>`);
+    t.setAttribute('aria-expanded','false');
+    t.onclick=()=>{ const o=t.classList.toggle('open'); t.setAttribute('aria-expanded',o); seen.add(i);
+      if(svg&&it.cls){ s.items.forEach(x=>x.cls&&svg.classList.remove(x.cls)); if(o) svg.classList.add(it.cls); if(it.cls==='p-enc'&&o) svg.classList.add('svgOn'); }
+      if(seen.size===s.items.length){fb.classList.add('show'); finish(s.id);} };
+    g.append(t);
+  });
+  m.append(g,fb); if(isDone(s.id)) fb.classList.add('show');
+};
+
+/* S3.3 بناء النظام */
+R.build=(s,m)=>{
+  head(s,m); m.append(hint(s.hint));
+  const pool=el('div','zone','<h3>المكونات المتاحة</h3><div class="chips"></div>');
+  const board=el('div','zone target','<h3>لوحة النظام</h3><div class="chips"></div>');
+  const two=el('div','grid'); two.append(pool,board);
+  const need=s.parts.filter(p=>p.ok).length, btn=el('button','btn','تحقق من التركيب'), fb=el('div','fb'), res=el('div'); btn.disabled=true;
+  const D=dnd([pool,board],()=>{ btn.disabled=board.querySelectorAll('.chip').length<need; fb.className='fb'; res.innerHTML='';
+    two.querySelectorAll('.chip').forEach(c=>c.classList.remove('good','bad')); });
+  s.parts.forEach(p=>{const c=el('button','chip',p.t); c.dataset.ok=p.ok; D.wire(c); $('.chips',pool).append(c);});
+  btn.onclick=()=>{ const on=[...board.querySelectorAll('.chip')]; on.forEach(c=>c.classList.add(c.dataset.ok==='1'?'good':'bad'));
+    const ok=on.length===need&&on.every(c=>c.dataset.ok==='1'); attempt(s.id,ok);
+    fb.className='fb show '+(ok?'ok':'no'); fb.textContent=ok?s.ok:s.no;
+    if(ok){ res.innerHTML=''; const b=media(s.done(),'النظام الذي صمّمته: من القياس إلى العرض'); b.firstChild.classList.add('svgOn'); res.append(b); finish(s.id);} };
+  m.append(two,el('div','row')); m.querySelector('.row').append(btn); m.append(fb,res);
+};
+
+/* الاختيار من متعدد والسيناريوهات */
+R.quiz=(s,m)=>{
+  head(s,m); let solved=0; const boxes=[];
+  s.qs.forEach((q,qi)=>{
+    const box=el('div','box',`<h3>${q.s}</h3><b>${q.q}</b>`), opts=el('div','opts'), fb=el('div','fb'), acts=el('div','row');
+    const btn=el('button','btn',s.btn); btn.disabled=true; let sel=null, locked=false;
+    q.o.forEach((o,oi)=>{ const b=el('button','opt',`<b>${L[oi]})</b> ${o.t}`);
+      b.onclick=()=>{ if(locked) return; sel=oi; [...opts.children].forEach(x=>x.classList.remove('sel','wrong')); b.classList.add('sel'); btn.disabled=false; fb.className='fb'; };
+      opts.append(b); });
+    btn.onclick=()=>{ const o=q.o[sel], b=opts.children[sel]; attempt(s.id+qi,!!o.ok);
+      b.classList.remove('sel'); b.classList.add(o.ok?'right':'wrong'); fb.className='fb show '+(o.ok?'ok':'no'); fb.textContent=o.f||q.wrong; btn.disabled=true;
+      if(o.ok){ locked=true; solved++;
+        if(s.seq && qi<s.qs.length-1){ const nx=el('button','btn amber','متابعة ←'); nx.onclick=()=>{nx.remove(); boxes[qi+1].style.display=''; boxes[qi+1].scrollIntoView({behavior:'smooth',block:'center'});}; acts.append(nx); }
+        if(solved===s.qs.length) finish(s.id); } };
+    acts.append(btn); box.append(opts,acts,fb); if(s.seq&&qi>0&&!isDone(s.id)) box.style.display='none';
+    boxes.push(box); m.append(box);
+  });
+};
+
+/* ختام الوحدة */
+function unitScore(U){ const k=U.keys, r=k.filter(x=>ST.first[x]===true).length, t=k.filter(x=>x in ST.first).length; return {r,t,n:k.length}; }
+R.unitEnd=(s,m)=>{
+  const U=UNITS[s.u-1], list=unitLessons(U.k), n=list.filter(x=>isDone(x.id)).length, sc=unitScore(U);
+  m.append(el('span','tag',`${U.code} · ختام الوحدة`),el('h1','',`أنهيت وحدة «${U.title}»`));
+  m.append(el('div','box',`<h3>ناتج التعلم</h3>${U.lo}`));
+  m.append(el('div','box',`<h3>إجاباتك الصحيحة من المحاولة الأولى في تقويمات الوحدة</h3><div class="score">${sc.r} / ${sc.n}</div>
+    <div>أنجزت ${n} من ${list.length} شاشات.${sc.t<sc.n?' بقيت أسئلة لم تُجب عنها بعد.':''}</div>`));
+  m.append(el('div','box',`<h3>تذكّر</h3><ul class="goals">${U.sum.map(x=>`<li>${x}</li>`).join('')}</ul>`));
+  const row=el('div','row'), a=el('button','btn ghost','القائمة الرئيسة'); a.onclick=()=>go(S.findIndex(x=>x.id==='menu')); row.append(a);
+  if(U.k<4){const b=el('button','btn',`الوحدة التالية: ${UNITS[U.k].title} ←`); b.onclick=()=>go(S.indexOf(unitLessons(U.k+1)[0])); row.append(b);}
+  m.append(row); if(n===list.length) finish(s.id);
+};
+
+/* الخلاصة */
+R.final=(s,m)=>{
+  const all=UNITS.flatMap(U=>U.keys), r=all.filter(k=>ST.first[k]===true).length;
+  const n=lessons.filter(x=>isDone(x.id)).length;
+  m.append(el('span','tag','الختام'),el('h1','','الخلاصة ونتيجتك'));
+  m.append(el('div','box',`<h3>إجاباتك الصحيحة من المحاولة الأولى في المسار كله</h3><div class="score">${r} / ${all.length}</div><div>أنجزت ${n} من ${lessons.length} شاشة تعليمية.</div>`));
+  const g=el('div','units');
+  UNITS.forEach(U=>{const sc=unitScore(U), list=unitLessons(U.k), d=list.filter(x=>isDone(x.id)).length;
+    g.append(el('div','ucard',`<span class="k">${U.code}</span><h3>${U.title}</h3><p>التقويم: ${sc.r} من ${sc.n} · الشاشات: ${d} من ${list.length}</p>`));});
+  m.append(g);
+  m.append(el('div','box',`<h3>نشاط إثرائي</h3>اختر مشكلة حقيقية في مدرستك أو مكان عملك، وطبّق عليها مراحل التصميم الأربع: ما المشكلة؟ ماذا ستقيس ومن يستلم البيانات؟ ما المكونات المناسبة؟ وأين ستجرّب الحل أولاً؟ ثم حدّد إجراءين لحماية خصوصية المستخدمين وأمن الأجهزة.`));
+  const rs=el('button','btn ghost','↺ مسح التقدم وإعادة المسار');
+  rs.onclick=()=>{ ST={done:[],first:{}}; save(); go(0); };
+  m.append(rs); finish(s.id);
+};
+
+/* المراجع */
+R.refs=(s,m)=>{
+  m.append(el('span','tag','المراجع'),el('h1','','المراجع ومصادر المحتوى'));
+  m.append(el('div','box',`<ol class="refs">
+   <li>International Telecommunication Union. (2012). <i>Overview of the Internet of things</i> (Recommendation ITU-T Y.2060, renumbered Y.4000). <a href="https://www.itu.int/rec/T-REC-Y.2060-201206-I" target="_blank" rel="noopener">https://www.itu.int/rec/T-REC-Y.2060-201206-I</a></li>
+   <li>OWASP Foundation. (2018). <i>OWASP Internet of Things Top 10</i>. <a href="https://owasp.org/www-project-internet-of-things/" target="_blank" rel="noopener">https://owasp.org/www-project-internet-of-things/</a></li>
+   <li>National Institute of Standards and Technology. (2020). <i>Foundational cybersecurity activities for IoT device manufacturers</i> (NISTIR 8259). <a href="https://csrc.nist.gov/pubs/ir/8259/final" target="_blank" rel="noopener">https://csrc.nist.gov/pubs/ir/8259/final</a></li>
+   <li>الهيئة السعودية للبيانات والذكاء الاصطناعي (سدايا). <i>نظام حماية البيانات الشخصية</i> (المرسوم الملكي م/19، 1443هـ) ولائحته التنفيذية. <a href="https://sdaia.gov.sa" target="_blank" rel="noopener">https://sdaia.gov.sa</a></li>
+  </ol>`));
+  m.append(el('div','box',`<h3>الوسائط وحقوق الاستخدام</h3>جميع الرسوم التوضيحية والصور التفاعلية في هذا المنتج رسوم SVG أصلية أُعدّت خصيصاً له، ولا تتضمن صوراً من مصادر خارجية. يُتاح المنتج وفق رخصة المشاع الإبداعي <b>CC BY-NC-SA 4.0</b>.`));
+};
+
+/* =========================================================
+   التشغيل والروابط المباشرة لكل وحدة (#rlo1 … #rlo4)
+   ========================================================= */
+function fromHash(){
+  const h=location.hash.slice(1); const mm=/^rlo([1-4])$/.exec(h);
+  if(mm) return S.indexOf(unitLessons(+mm[1])[0]);
+  const i=S.findIndex(x=>x.id===h); return i<0?0:i;
+}
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('show');
+window.addEventListener('hashchange',()=>{const i=fromHash(); if(i!==cur) go(i);});
+go(fromHash());
+</script>
+</body>
+</html>
