@@ -1,801 +1,751 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>إنترنت الأشياء — مسار تعلم رقمي تفاعلي (4 وحدات RLOs)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دليل ADDIE للذكاء الاصطناعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@400;600;700&display=swap">
 <style>
+/* Layout: dark "neural" hero holding the ADDIE letter tiles (the navigation itself); below it a light, theme-aware reading area where each stage carries its own gradient. */
 :root{
-  --ink:#0f2a2e; --deep:#0b3b40; --teal:#0e7c7b; --mint:#d9f2ee; --paper:#f6faf9;
-  --card:#fff; --line:#d5e3e1; --amber:#f2a516; --ok:#1e8e5a; --okbg:#e3f6ec;
-  --bad:#c0392b; --badbg:#fdecea; --muted:#5b7376; --sky:#e7f0fb;
+  --bg:#f4f6fb; --surface:#ffffff; --sunk:#eef1f7; --fg:#141a2b; --muted:#566079; --line:#dde2ee;
+  --ink:#0a0f1f; --ink-2:#121a33; --on-ink:#eef2ff; --on-ink-muted:#a9b3d1;
+  --a1:#5fb7f0; --a2:#1f7fc4;  --d11:#4f9be8; --d12:#1f68c9;  --d21:#3f84de; --d22:#1d55b3;
+  --i1:#346fcc; --i2:#1b469c;  --e1:#2b5cb8; --e2:#183a85;
+  --tint:#e8f0fc; --tint-line:#c3d6f3; --accent-text:#1d55b3;
+  --focus:#2563eb;
+  --display:"Readex Pro","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
 }
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1222; --surface:#151c31; --sunk:#1c2540; --fg:#e9edf8; --muted:#a3acc6; --line:#27314f; --focus:#8ab4ff;
+  --tint:#17284a; --tint-line:#2b4373; --accent-text:#8fc0f5; color-scheme:dark;
+}}
+:root[data-theme="dark"]{ --bg:#0d1222; --surface:#151c31; --sunk:#1c2540; --fg:#e9edf8; --muted:#a3acc6; --line:#27314f; --focus:#8ab4ff; --tint:#17284a; --tint-line:#2b4373; --accent-text:#8fc0f5; color-scheme:dark; }
+
 *{box-sizing:border-box}
-body{margin:0;font-family:"Segoe UI",Tahoma,"Noto Sans Arabic","Noto Kufi Arabic",Arial,sans-serif;background:var(--paper);color:var(--ink);line-height:1.8;font-size:17px}
-button{font:inherit;cursor:pointer;color:inherit}
-.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
-aside{background:var(--deep);color:#e8f5f3;padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto}
-.brand{font-weight:800;font-size:1.12rem;line-height:1.5}
-.brand small{display:block;font-weight:400;color:#a9d2cd;font-size:.78rem}
-.bar{height:8px;background:#ffffff22;border-radius:8px;margin:14px 0 4px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--amber);transition:width .4s}
-.barlbl{font-size:.8rem;color:#a9d2cd;margin-bottom:6px}
-nav h4{margin:16px 0 4px;font-size:.78rem;color:var(--amber)}
-nav button{display:flex;gap:9px;align-items:center;width:100%;text-align:right;background:none;border:0;color:#e8f5f3;padding:6px 9px;border-radius:9px;font-size:.88rem;line-height:1.5}
-nav button:hover{background:#ffffff14}
-nav button.on{background:var(--teal);font-weight:700}
-nav .dot{flex:0 0 20px;height:20px;border-radius:50%;border:2px solid #7fb9b3;display:grid;place-items:center;font-size:.68rem}
-nav button.done .dot{background:var(--amber);border-color:var(--amber);color:var(--deep);font-weight:800}
-main{padding:30px clamp(16px,5vw,60px) 70px;max-width:1000px}
-main:focus{outline:none}
-.unitbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;background:var(--mint);border-radius:14px;padding:8px 14px;font-size:.86rem;color:var(--deep);margin-bottom:14px}
-.unitbar b{color:var(--teal)}
-.unitbar .lo{flex:1 1 320px}
-.tag{display:inline-block;background:var(--mint);color:var(--teal);font-weight:700;font-size:.8rem;padding:2px 12px;border-radius:20px}
-h1{font-size:clamp(1.45rem,3.2vw,2rem);margin:8px 0 6px;line-height:1.4}
-.lead{color:var(--muted);margin:0 0 16px;font-size:1.04rem}
-.hint{display:flex;gap:8px;align-items:center;font-weight:700;color:var(--teal);margin:14px 0 10px}
-.hint::before{content:"👆"}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.tile{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 16px;text-align:right;transition:.2s;display:flex;flex-direction:column;gap:4px}
-.tile:hover{border-color:var(--teal);transform:translateY(-2px)}
-.tile .ic{font-size:1.7rem;line-height:1.2}
-.tile .q{color:var(--muted);font-size:.9rem}
-.tile .more{display:none;font-size:.93rem;border-top:1px dashed var(--line);padding-top:8px;margin-top:4px}
-.tile.open{border-color:var(--teal);background:#f0faf8}
-.tile.open .more{display:block}
-.tile.seen{border-color:#9fd1c8}
-.num{align-self:flex-start;background:var(--deep);color:#fff;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:700}
-.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:16px 0}
-.box h3{margin:0 0 6px;font-size:1rem;color:var(--teal)}
-.fb{display:none;border-radius:14px;padding:12px 18px;margin:14px 0;font-weight:600}
-.fb.show{display:block}
-.fb.ok{background:var(--okbg);color:#14613d;border:1px solid #a8dcc0}
-.fb.no{background:var(--badbg);color:#8e2a20;border:1px solid #f0b8b1}
-.fb.ok::before{content:"✔ "}.fb.no::before{content:"✖ "}
-.opts{display:grid;gap:10px;margin:12px 0}
-.opt{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 16px;text-align:right}
-.opt:hover{border-color:var(--teal)}
-.opt.sel{border-color:var(--teal);background:#f0faf8}
-.opt.right{border-color:var(--ok);background:var(--okbg)}
-.opt.wrong{border-color:var(--bad);background:var(--badbg)}
-.btn{background:var(--teal);color:#fff;border:0;border-radius:12px;padding:9px 22px;font-weight:700}
-.btn:disabled{background:#b9c9c7;cursor:not-allowed}
-.btn.ghost{background:none;color:var(--teal);border:2px solid var(--teal)}
-.btn.amber{background:var(--amber);color:var(--deep)}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
-.pager{display:flex;justify-content:space-between;gap:12px;margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
-/* media */
-.media{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;margin:14px 0}
-.media svg{display:block;width:100%;height:auto}
-.cap{font-size:.8rem;color:var(--muted);padding:4px 14px 8px}
-.hs{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:var(--amber);box-shadow:0 2px 8px #0004;font-weight:800;color:var(--deep);display:grid;place-items:center;font-size:.95rem}
-.hs::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--amber);animation:pulse 1.6s infinite}
-.hs.seen{background:var(--ok);color:#fff}.hs.seen::after{display:none}
-.hs.cur{outline:4px solid var(--deep)}
-@keyframes pulse{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.5);opacity:0}}
-.tip{position:absolute;z-index:3;width:min(260px,70%);background:var(--deep);color:#fff;border-radius:12px;padding:10px 14px;font-size:.88rem;line-height:1.6;box-shadow:0 6px 18px #0005;pointer-events:none}
-.tip b{color:var(--amber);display:block}
-.panel{background:#f0faf8;border:2px solid var(--teal);border-radius:16px;padding:12px 18px;margin-top:12px}
-.panel h3{margin:0;color:var(--teal);font-size:1.02rem}
-/* keywords */
-.def{font-size:1.25rem;line-height:2.1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px}
-.kw{border-radius:6px;padding:0 3px;transition:background .5s,color .5s}
-.kw.lit{background:var(--amber);color:var(--deep);font-weight:700}
-/* modal */
-.modal{position:fixed;inset:0;background:#0b3b40aa;display:grid;place-items:center;z-index:20;padding:16px}
-.modal .in{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:22px 24px;box-shadow:0 20px 50px #0006}
-.modal .in h2{margin:0 0 6px;color:var(--teal);font-size:1.3rem}
-.modal .ex{background:var(--sky);border-radius:12px;padding:10px 14px;margin:12px 0}
-/* stepper infographic */
-.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
-.stage{position:relative;background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px;text-align:center;opacity:.35;transition:.35s}
-.stage .ic{font-size:2rem;display:block}
-.stage b{display:block;font-size:.92rem;line-height:1.5}
-.stage.on{opacity:1;border-color:var(--teal)}
-.stage.cur{background:#f0faf8;box-shadow:0 0 0 4px #0e7c7b33;animation:pop .5s}
-@keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
-.stage:not(:last-child)::after{content:"←";position:absolute;left:-14px;top:40%;font-weight:800;color:var(--teal)}
-/* drag */
-.dd{display:grid;gap:14px}
-.zone{border:2px dashed var(--line);border-radius:16px;padding:12px;min-height:120px;background:#fff;text-align:right}
-.zone h3{margin:0 0 8px;font-size:.95rem;color:var(--muted)}
-.zone.target{border-color:var(--teal);background:#f0faf8}
-.zone.over,.zone.armed{background:var(--mint);border-style:solid}
-.chips{display:flex;flex-wrap:wrap;gap:10px;min-height:44px}
-.chip{background:#fff;border:2px solid var(--line);border-radius:30px;padding:7px 15px}
-.chip:hover{border-color:var(--amber)}
-.chip.picked{border-color:var(--amber);background:#fff5df;box-shadow:0 0 0 3px #f2a51655}
-.chip.bad{border-color:var(--bad);background:var(--badbg)}
-.chip.good{border-color:var(--ok);background:var(--okbg)}
-/* flip */
-.flip{perspective:900px;height:190px;background:none;border:0;padding:0;text-align:right}
-.flip .in{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
-.flip.on .in{transform:rotateY(180deg)}
-.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:center;gap:4px}
-.flip .f{background:#fff;border:2px solid var(--line)}
-.flip .b{background:var(--deep);color:#fff;transform:rotateY(180deg);font-size:.95rem}
-.flip .f .ic{font-size:2rem}
-.flip .f small{color:var(--muted)}
-/* process steps */
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;position:relative}
-/* cover & menu */
-.cover{min-height:70vh;display:grid;align-content:center;gap:10px}
-.cover h1{font-size:clamp(1.9rem,4.6vw,2.8rem)}
-.cover .meta{color:var(--muted);font-size:.95rem}
-.units{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
-.ucard{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px}
-.ucard .k{font-size:.78rem;color:var(--teal);font-weight:800}
-.ucard h3{margin:0;font-size:1.08rem}
-.ucard p{margin:0;font-size:.9rem;color:var(--muted)}
-.ucard .pr{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
-.ucard .pr i{display:block;height:100%;background:var(--amber)}
-.goals{padding:0;margin:0;list-style:none;display:grid;gap:8px}
-.goals li{display:flex;gap:10px}.goals li::before{content:"◆";color:var(--amber)}
-.score{font-size:2.8rem;font-weight:800;color:var(--teal);line-height:1.2}
-.refs li{margin-bottom:10px}
-.refs a{color:var(--teal);word-break:break-all}
-.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
-.legend div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.9rem}
-.menuBtn{display:none}
-/* svg states */
-svg text{font-family:inherit}
-.link{stroke-dasharray:6 6}
-.svgOn .link{animation:flow 1s linear infinite;stroke:#0e7c7b}
-@keyframes flow{to{stroke-dashoffset:-24}}
-.node circle{fill:#fff;stroke:#0e7c7b;stroke-width:3;transition:.3s}
-.node.hl circle{fill:#fff1cf;stroke:#f2a516;stroke-width:5}
-.room{fill:#fff;stroke:#7fa9a5;stroke-width:3;transition:.3s}
-.on-living .r-living,.on-bed .r-bed,.on-door .r-door{fill:#fff6dd}
-.lamp{fill:#d8dee0;transition:.3s}.on-living .lamp{fill:#f2a516}
-.glow{opacity:0;transition:.3s}.on-living .glow{opacity:.35}
-.acwave{opacity:0;transition:.3s}.on-bed .acwave{opacity:1}
-.alert{opacity:0;transition:.3s}.on-door .alert{opacity:1}
-.cls-board .z-board,.cls-door .z-door,.cls-power .z-power{stroke:#f2a516;stroke-width:5}
-.w-watch .z-watch,.w-remote .z-remote,.w-alert .z-alert{stroke:#f2a516;stroke-width:5}
-.bad-hr{display:none;fill:#ffd5cf}.w-alert .bad-hr{display:inline}.w-alert .hr-ok{display:none}
-.lockon{opacity:0;transition:.3s}.p-enc .lockon{opacity:1}
-.p-consent .z-consent{stroke:#f2a516;stroke-width:5}
-.fixed-pw .pw-bad{display:none}.pw-good{display:none}.fixed-pw .pw-good{display:inline}
-.fixed-fw .fw-bad{display:none}.fw-good{display:none}.fixed-fw .fw-good{display:inline}
-.fixed-pw .z-pw,.fixed-fw .z-fw{stroke:#1e8e5a}
-@media(max-width:860px){
-  .app{grid-template-columns:1fr}
-  aside{position:fixed;inset:0 0 0 auto;width:min(300px,86vw);display:none;z-index:15;box-shadow:0 0 0 100vmax #0006}
-  aside.show{display:block}
-  .menuBtn{display:inline-block;position:sticky;top:10px;z-index:4;margin:10px 16px 0;background:var(--deep);color:#fff;border:0;border-radius:10px;padding:8px 14px}
-  main{padding-top:12px}
-  .stages{grid-template-columns:repeat(2,1fr)}
-  .stage:not(:last-child)::after{display:none}
-  .hs{width:32px;height:32px;font-size:.85rem}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.75}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:10px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.inner{max-width:1080px;margin:0 auto}
+
+/* stage palettes */
+.s-A{--c1:var(--a1);--c2:var(--a2)} .s-D1{--c1:var(--d11);--c2:var(--d12)} .s-D2{--c1:var(--d21);--c2:var(--d22)}
+.s-I{--c1:var(--i1);--c2:var(--i2)} .s-E{--c1:var(--e1);--c2:var(--e2)}
+.grad{background:linear-gradient(135deg,var(--c1),var(--c2))}
+
+/* HERO (deliberately always dark) */
+.hero{position:relative;background:var(--ink);color:var(--on-ink);overflow:hidden;padding-block:36px 40px}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(600px 320px at 85% 0%,rgba(95,183,240,.20),transparent 70%),
+             radial-gradient(600px 320px at 10% 40%,rgba(43,92,184,.28),transparent 70%)}
+#net{position:absolute;inset:0;width:100%;height:100%;opacity:.55;pointer-events:none}
+.hero .inner{position:relative;display:flex;flex-direction:column;gap:22px}
+.badge{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);border-radius:999px;padding:4px 14px;font-size:13px;color:var(--on-ink-muted)}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--a1);box-shadow:0 0 10px var(--a1)}
+.hero h1{font-size:clamp(28px,5vw,48px);font-weight:700;max-width:22ch}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,#9fd3fa,#5fb7f0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{color:var(--on-ink-muted);max-width:62ch;font-size:17px}
+
+.rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;direction:ltr;margin-top:6px}
+.letter{position:relative;border:0;border-radius:20px;padding:18px 8px 14px;display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;
+  background:linear-gradient(160deg,var(--c1),var(--c2));box-shadow:0 10px 26px -14px rgba(95,183,240,.6);transition:transform .2s,box-shadow .2s,filter .2s;overflow:hidden}
+.letter::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.22),transparent 45%);pointer-events:none}
+.letter svg{width:26px;height:26px;opacity:.95}
+.letter .ch{font-family:var(--display);font-weight:700;font-size:clamp(46px,10vw,96px);line-height:1;text-shadow:0 4px 18px rgba(0,0,0,.25)}
+.letter .ar{font-weight:700;font-size:15px;direction:rtl}
+.letter .en{font-size:12px;opacity:.85}
+.letter:hover{transform:translateY(-4px);box-shadow:0 16px 38px -10px var(--c1)}
+.rail.has-sel .letter{filter:saturate(.5) brightness(.7)}
+.rail.has-sel .letter[aria-pressed="true"]{filter:none;transform:translateY(-6px);box-shadow:0 0 0 3px #fff,0 18px 40px -10px var(--c1)}
+.hint{color:var(--on-ink-muted);font-size:14px;text-align:center}
+.extras{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.xbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--on-ink);border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;transition:background .15s}
+.xbtn svg{width:18px;height:18px}
+.xbtn:hover,.xbtn[aria-pressed="true"]{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.45)}
+
+/* MAIN */
+main.gut{padding-block:32px 48px}
+main .inner{display:flex;flex-direction:column;gap:28px}
+.case{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.case .ic{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--a1),var(--e2))}
+.case .ic svg{width:24px;height:24px}
+.case b{display:block;font-family:var(--display)}
+.case span{color:var(--muted);font-size:15px}
+
+/* overview (home state) */
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sec-title h2{font-size:22px}
+.sec-title span{color:var(--muted);font-size:14px}
+.overview{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.ov{text-align:right;border:1px solid var(--line);background:var(--surface);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;padding:0}
+.ov:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px var(--c2)}
+.ov .top{position:relative;padding:16px 18px;color:#fff;display:flex;align-items:center;gap:12px;min-height:84px}
+.ov .top .big{font-family:var(--display);font-weight:700;font-size:48px;line-height:1;opacity:.95}
+.ov .top b{font-family:var(--display);font-size:18px;display:block}
+.ov .top small{opacity:.85}
+.ov .top svg{position:absolute;left:14px;top:14px;width:46px;height:46px;opacity:.28}
+.ov .body{padding:14px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.ov .body p{color:var(--muted);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;direction:ltr;justify-content:flex-end}
+.chip{unicode-bidi:isolate;font-size:12.5px;font-weight:600;border-radius:999px;padding:2px 10px;background:color-mix(in srgb,var(--c1) 16%,transparent);color:var(--fg);border:1px solid color-mix(in srgb,var(--c1) 40%,transparent)}
+
+/* stage view */
+.stage{border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.stage-hero{position:relative;color:#fff;padding:26px clamp(18px,3vw,32px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center}
+.stage-hero h2{font-size:clamp(24px,3.5vw,32px)}
+.stage-hero p{opacity:.92;max-width:60ch}
+.stage-hero .part{display:inline-block;margin-bottom:8px;font-size:13px;background:rgba(255,255,255,.2);border-radius:999px;padding:2px 12px}
+.stage-hero .art{width:110px;height:110px;opacity:.9}
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;padding:22px clamp(16px,3vw,28px)}
+.tool{text-align:right;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;min-width:0;transition:transform .2s,border-color .2s,box-shadow .2s}
+.tool:hover{transform:translateY(-3px);border-color:var(--c1);box-shadow:0 12px 26px -18px var(--c2)}
+.mono{grid-row:span 3;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:700;font-size:18px;direction:ltr;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.tool .num{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tool .nm{font-family:var(--display);font-weight:700;font-size:19px;unicode-bidi:isolate;direction:ltr;text-align:right}
+.tool .ds{font-size:14px;color:var(--muted)}
+.tool .go{grid-column:2;font-size:13px;font-weight:700;color:var(--accent-text)}
+
+/* tool sheet */
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.sheet-top{position:relative;color:#fff;padding:20px clamp(18px,3vw,32px) 22px;display:flex;flex-direction:column;gap:12px}
+.crumbs{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 15px;font-size:14px;font-weight:600}
+.btn:hover{border-color:var(--c2)}
+.sheet-top .btn{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:#fff}
+.sheet-top .btn:hover{background:rgba(255,255,255,.3)}
+.idrow{display:flex;align-items:center;gap:16px}
+.idrow .mono{grid-row:auto;width:64px;height:64px;font-size:22px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35)}
+.sheet-top h2{font-size:clamp(26px,4vw,36px);direction:ltr;text-align:right}
+.meta{font-size:13px;opacity:.9}
+.tabs{display:flex;gap:4px;overflow-x:auto;padding:0 clamp(12px,3vw,24px);border-bottom:1px solid var(--line);scrollbar-width:thin}
+.tab{border:0;background:none;padding:13px 12px 11px;font-size:15px;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--c2);font-weight:700}
+.pane{padding:24px clamp(18px,3vw,32px);display:flex;flex-direction:column;gap:18px;max-width:80ch}
+.pane h3{font-size:17px;color:var(--accent-text)}
+
+.pane ul{margin:0;padding-right:20px;display:flex;flex-direction:column;gap:6px}
+.uses{list-style:none;padding:0!important}
+.uses li{display:flex;gap:10px;align-items:flex-start}
+.uses li::before{content:"";flex:none;width:10px;height:10px;margin-top:9px;border-radius:3px;background:linear-gradient(135deg,var(--c1),var(--c2))}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start;position:relative;padding-bottom:16px}
+.steps li:not(:last-child)::after{content:"";position:absolute;right:17px;top:36px;bottom:0;width:2px;background:color-mix(in srgb,var(--c1) 35%,transparent)}
+.steps li::before{content:counter(s);font-family:var(--display);font-weight:700;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;display:grid;place-items:center;font-size:15px}
+.steps li span{padding-top:5px}
+.casechip{align-self:flex-start;font-size:13px;font-weight:600;border-radius:999px;padding:3px 12px;background:var(--sunk);color:var(--muted)}
+.scenario{background:var(--sunk);border-radius:14px;padding:14px 16px}
+.prompt{position:relative;border-radius:14px;padding:18px 18px 56px;background:var(--ink);color:#e6ebff;white-space:pre-wrap;border:1px solid color-mix(in srgb,var(--c1) 45%,transparent);box-shadow:0 0 0 4px color-mix(in srgb,var(--c1) 10%,transparent)}
+.prompt::before{content:"PROMPT";position:absolute;top:-10px;right:16px;font:700 11px/1 var(--mono);letter-spacing:.12em;background:linear-gradient(90deg,var(--c1),var(--c2));color:#fff;padding:5px 9px;border-radius:6px}
+.prompt[dir="ltr"]{text-align:left;font-family:var(--mono);font-size:14px}
+.prompt[dir="ltr"]::before{right:auto;left:16px}
+.copy{position:absolute;bottom:12px;left:12px;border:0;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;border-radius:9px;padding:6px 15px;font-size:13px;font-weight:700}
+.note{border-right:4px solid var(--c1);padding:4px 14px 4px 0}
+.note b{display:block;font-size:14px;color:var(--muted);font-weight:600}
+.split{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.box{border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.box.pro{background:var(--tint);border:1px solid var(--tint-line)}
+.box.con{background:var(--sunk);border:1px solid var(--line)}
+.box.con h3{color:var(--muted)!important}
+.facts{width:100%;border-collapse:collapse;font-size:15px}
+.facts th{width:30%;text-align:right;color:var(--muted);font-weight:600;padding:10px 0 10px 14px;vertical-align:top;border-bottom:1px solid var(--line)}
+.facts td{padding:10px 18px 10px 0;border-bottom:1px solid var(--line)}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.links a{text-decoration:none;border:1.5px solid var(--c1);color:var(--fg);border-radius:12px;padding:8px 15px;font-weight:700;font-size:14px}
+.links a.primary{background:linear-gradient(135deg,var(--c1),var(--c2));border-color:transparent;color:#fff}
+.date{font-size:13px;color:var(--muted)}
+.eth{border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--tint);border:1px solid var(--tint-line)}
+.pager{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:0 clamp(18px,3vw,32px) 24px}
+
+/* reference pages */
+.ref{background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.ref-top{color:#fff;padding:24px clamp(18px,3vw,32px);display:flex;align-items:center;gap:16px}
+.ref-top svg{width:48px;height:48px;flex:none}
+.ref-top h2{font-size:clamp(22px,3.5vw,30px)}
+.ref-top p{opacity:.9;font-size:15px}
+.ref-body{padding:22px clamp(18px,3vw,32px);display:flex;flex-direction:column;gap:18px}
+.principles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.principles div{border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0;background:var(--bg)}
+.principles b{font-family:var(--display);display:flex;align-items:center;gap:8px}
+.principles b i{font-style:normal;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:13px;background:linear-gradient(135deg,var(--c1),var(--c2))}
+.principles span{font-size:15px;color:var(--muted)}
+.checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.checklist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.checklist input{width:18px;height:18px;margin-top:5px;accent-color:var(--d22)}
+.gsearch{width:100%;max-width:440px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:12px;padding:10px 14px;font:inherit}
+.gloss{display:flex;flex-direction:column}
+.gloss div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:6px 18px;padding:12px 0;border-bottom:1px solid var(--line)}
+.gloss b{font-family:var(--display)}
+.gloss .en{display:block;font-size:13px;color:var(--muted);direction:ltr;text-align:right;font-weight:500}
+.refs{margin:0;padding-right:22px;display:flex;flex-direction:column;gap:12px}
+.refs li[dir="ltr"]{text-align:left}
+.refs a{word-break:break-all;font-size:14px;color:var(--focus)}
+
+/* parts + footer */
+.parts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.part-card{border-radius:16px;padding:16px 18px;color:#fff;display:flex;flex-direction:column;gap:4px}
+.part-card b{font-family:var(--display);font-size:17px}
+.part-card span{font-size:14px;opacity:.92}
+.p1{background:linear-gradient(135deg,var(--a1),var(--d12))}
+.p2{background:linear-gradient(135deg,var(--d21),var(--d22))}
+.p3{background:linear-gradient(135deg,var(--i1),var(--e2))}
+footer.gut{background:var(--ink);color:var(--on-ink-muted);padding-block:26px;font-size:14px;text-align:center}
+footer .inner{display:flex;flex-direction:column;gap:6px}
+footer b{color:var(--on-ink)}
+
+.xcta{text-decoration:none;background:linear-gradient(135deg,var(--a1),var(--d22));border-color:transparent}
+.xcta:hover{filter:brightness(1.1)}
+.rate{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;border-radius:20px;padding:22px clamp(18px,3vw,28px);background:linear-gradient(135deg,var(--ink-2),#173a7a);color:var(--on-ink);border:1px solid rgba(95,183,240,.35)}
+.rate-ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a1),var(--d22));color:#fff}
+.rate-ic svg{width:28px;height:28px}
+.rate h2{font-size:clamp(19px,2.6vw,24px)}
+.rate p{color:var(--on-ink-muted);font-size:15px}
+.rate-btn{white-space:nowrap;text-decoration:none;font-weight:700;color:#0a0f1f;background:#9fd3fa;border-radius:12px;padding:12px 20px}
+.rate-btn:hover{background:#c4e4fc}
+@media (max-width:640px){
+  .rate{grid-template-columns:1fr;text-align:right}.rate-btn{justify-self:stretch;text-align:center}
+  .rail{gap:6px}.letter{padding:12px 2px 10px;border-radius:14px}.letter .en,.letter svg{display:none}.letter .ar{font-size:12px}
+  .parts{grid-template-columns:1fr}
+  .stage-hero{grid-template-columns:1fr}.stage-hero .art{display:none}
+  .gloss div{grid-template-columns:1fr}
+  .facts tr{display:block;border-bottom:1px solid var(--line);padding:8px 0}
+  .facts th,.facts td{display:block;width:auto;border:0;padding:0}
+  .facts th{font-size:13px}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
-<body>
-<div class="app">
-  <aside id="side" aria-label="قائمة المحتويات">
-    <div class="brand">إنترنت الأشياء<small>مسار تعلم رقمي تفاعلي · أربع وحدات تعلم RLOs</small></div>
-    <div class="bar"><i id="barFill"></i></div>
-    <div class="barlbl" id="barLbl"></div>
-    <nav id="nav"></nav>
-  </aside>
-  <div>
-    <button class="menuBtn" id="menuBtn" aria-controls="side">☰ المحتويات</button>
-    <main id="main" tabindex="-1"></main>
+<body style="margin:0">
+
+<header class="hero gut" dir="rtl" lang="ar">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="inner">
+    <span class="badge"><i></i>دليل إرشادي رقمي تفاعلي · 12 أداة · 5 مراحل</span>
+    <h1>أدوات <em>الذكاء الاصطناعي</em> في التصميم التعليمي</h1>
+    <p class="sub">اضغط على أي حرف من كلمة ADDIE لتظهر لك أدوات تلك المرحلة، ثم افتح بطاقة الأداة لتتعرف على وظيفتها وخطوات استخدامها ومثال تطبيقي عليها.</p>
+    <nav class="rail" id="rail" aria-label="مراحل ADDIE"></nav>
+    <p class="hint" id="hint">↑ اختر حرفًا للبدء</p>
+    <nav class="extras" aria-label="أقسام مرجعية">
+      <button class="xbtn" data-go="ethics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>الإرشادات الأخلاقية</button>
+      <button class="xbtn" data-go="glossary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg>المسرد</button>
+      <button class="xbtn" data-go="references"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"/></svg>المراجع</button>
+      <a class="xbtn xcta" href="https://docs.google.com/forms/d/e/1FAIpQLSeoJbM27WptlT3N72hR6TzdmX8-3dUEnbWHJM4-29S5TJ_W1g/viewform" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>قيّم الدليل</a>
+    </nav>
   </div>
-</div>
+</header>
 
+<main class="gut" dir="rtl" lang="ar">
+  <div class="inner">
+    <div id="view" aria-live="polite"></div>
+    <div class="case">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 9h5M7 12h8"/></svg></span>
+      <div><b>الحالة التطبيقية في الدليل</b><span id="case-text"></span></div>
+    </div>
+    <div class="parts" aria-label="أجزاء الدليل">
+      <div class="part-card p1"><b>الجزء الأول</b><span>أدوات التحليل والتخطيط: التحليل، التصميم</span></div>
+      <div class="part-card p2"><b>الجزء الثاني</b><span>أدوات إنتاج المحتوى والوسائط: التطوير</span></div>
+      <div class="part-card p3"><b>الجزء الثالث</b><span>أدوات التقييم والتغذية الراجعة: التنفيذ، التقويم</span></div>
+    </div>
+    <section class="rate" aria-label="تقييم الدليل">
+      <div class="rate-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></div>
+      <div class="rate-txt"><h2>انتهيت من تصفح الدليل؟ شاركنا رأيك</h2><p>استبانة قصيرة تستغرق نحو 7 دقائق، دون أي بيانات شخصية. تساعدنا إجاباتك في تحسين الدليل.</p></div>
+      <a class="rate-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeoJbM27WptlT3N72hR6TzdmX8-3dUEnbWHJM4-29S5TJ_W1g/viewform" target="_blank" rel="noopener">افتح استبانة التقييم ↗</a>
+    </section>
+  </div>
+</main>
+
+<footer class="gut" dir="rtl" lang="ar">
+  <div class="inner">
+    <p>المخرج المولَّد بالذكاء الاصطناعي مسودة قابلة للمراجعة، وقرار التصميم النهائي مسؤولية المصمم التعليمي. قد تتغير الواجهات والخطط، فراجع الروابط الرسمية قبل الاشتراك.</p>
+    <p><b>فريق المشروع:</b> أحمد الفالح · أكرم العنزي · زياد الشهري · محمد الأنصاري — بإشراف د. عبير محمد العجلان</p>
+    <p>جامعة الأميرة نورة بنت عبدالرحمن · الماجستير المهني في تصميم التعليم والتكنولوجيا</p>
+  </div>
+</footer>
 <script>
-/* =========================================================
-   الصور التفاعلية (رسوم SVG أصلية أُعدّت لهذا المنتج)
-   ========================================================= */
-const IMG = {
-things: `<svg viewBox="0 0 640 270" role="img" aria-label="أجهزة مادية متصلة بالإنترنت تتبادل البيانات">
-  <rect width="640" height="270" fill="#f3faf8"/>
-  <g class="links" stroke="#9cbab6" stroke-width="3" fill="none">
-    <path class="link" d="M120 70 Q220 80 280 120"/><path class="link" d="M120 200 Q220 190 280 150"/>
-    <path class="link" d="M520 70 Q420 80 360 120"/><path class="link" d="M520 200 Q420 190 360 150"/>
-    <path class="link" d="M320 235 L320 170"/></g>
-  <g fill="#d9f2ee"><circle cx="295" cy="128" r="34"/><circle cx="335" cy="108" r="42"/><circle cx="372" cy="134" r="30"/><rect x="270" y="128" width="130" height="38" rx="19"/></g>
-  <text x="335" y="148" text-anchor="middle" font-size="18" font-weight="700" fill="#0b3b40">الإنترنت</text>
-  <g transform="translate(95,50)"><rect x="-16" y="-34" width="32" height="68" rx="8" fill="#0b3b40"/><rect x="-22" y="-20" width="44" height="40" rx="10" fill="#0e7c7b"/><text y="7" text-anchor="middle" font-size="16" fill="#fff">♥</text></g>
-  <text x="95" y="108" text-anchor="middle" font-size="14" fill="#0f2a2e">ساعة ذكية</text>
-  <g transform="translate(95,196)"><rect x="-22" y="-36" width="44" height="72" rx="6" fill="#fff" stroke="#0b3b40" stroke-width="3"/><line x1="-22" y1="-6" x2="22" y2="-6" stroke="#0b3b40" stroke-width="3"/><rect x="12" y="-26" width="4" height="12" fill="#0b3b40"/><rect x="12" y="4" width="4" height="16" fill="#0b3b40"/></g>
-  <text x="95" y="252" text-anchor="middle" font-size="14" fill="#0f2a2e">ثلاجة ذكية</text>
-  <g transform="translate(545,46)"><circle r="22" fill="#f2a516"/><rect x="-10" y="20" width="20" height="14" rx="3" fill="#0b3b40"/></g>
-  <text x="545" y="108" text-anchor="middle" font-size="14" fill="#0f2a2e">مصباح ذكي</text>
-  <g transform="translate(545,196)"><rect x="-38" y="-16" width="76" height="26" rx="10" fill="#0e7c7b"/><rect x="-22" y="-32" width="44" height="20" rx="8" fill="#0e7c7b"/><circle cx="-20" cy="14" r="9" fill="#0b3b40"/><circle cx="20" cy="14" r="9" fill="#0b3b40"/></g>
-  <text x="545" y="240" text-anchor="middle" font-size="14" fill="#0f2a2e">سيارة متصلة</text>
-  <g transform="translate(320,236)"><rect x="-16" y="-12" width="32" height="24" rx="6" fill="#fff" stroke="#0b3b40" stroke-width="3"/><text y="6" text-anchor="middle" font-size="14">🌡️</text></g>
-  <text x="320" y="266" text-anchor="middle" font-size="13" fill="#0f2a2e">مستشعر</text>
-</svg>`,
-pipe(nodes){ // مخطط تدفق من اليمين إلى اليسار
-  const n=nodes.length, w=640, gap=w/(n), r=46; let s=`<svg viewBox="0 0 ${w} 210" role="img" aria-label="مخطط مكونات النظام وتدفق البيانات"><rect width="${w}" height="210" fill="#f3faf8"/>`;
-  nodes.forEach((d,i)=>{const x=w-gap/2-i*gap;
-    if(i<n-1){const x2=x-gap; s+=`<line class="link" x1="${x-r-6}" y1="92" x2="${x2+r+14}" y2="92" stroke="#9cbab6" stroke-width="4"/><path d="M${x2+r+18} 82 L${x2+r+4} 92 L${x2+r+18} 102 Z" fill="#0e7c7b"/>`;}
-    s+=`<g class="node" id="nd${i}"><circle cx="${x}" cy="92" r="${r}"/><text x="${x}" y="105" text-anchor="middle" font-size="34">${d.ic}</text><text x="${x}" y="170" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">${d.t}</text>${d.s?`<text x="${x}" y="192" text-anchor="middle" font-size="13" fill="#5b7376">${d.s}</text>`:''}</g>`;});
-  return s+`</svg>`;
-},
-house: `<svg viewBox="0 0 600 340" role="img" aria-label="مخطط منزل ذكي فيه غرفة معيشة وغرفة نوم ومدخل">
-  <rect width="600" height="340" fill="#eef5f4"/>
-  <rect class="room r-living" x="20" y="20" width="290" height="300" rx="6"/>
-  <rect class="room r-bed" x="310" y="20" width="270" height="150" rx="6"/>
-  <rect class="room r-door" x="310" y="170" width="270" height="150" rx="6"/>
-  <circle class="glow" cx="165" cy="120" r="95" fill="#f2a516"/>
-  <circle class="lamp" cx="165" cy="120" r="18" stroke="#0b3b40" stroke-width="3"/>
-  <rect x="60" y="230" width="200" height="50" rx="14" fill="#9cc7c2"/><rect x="60" y="215" width="200" height="24" rx="10" fill="#7fb3ad"/>
-  <rect x="120" y="170" width="90" height="34" rx="6" fill="#c9dcda"/>
-  <text x="165" y="305" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">غرفة المعيشة</text>
-  <rect x="440" y="70" width="110" height="80" rx="10" fill="#c9dcda"/><rect x="440" y="70" width="110" height="24" rx="10" fill="#fff" stroke="#9cbab6"/>
-  <rect x="330" y="34" width="90" height="26" rx="6" fill="#fff" stroke="#0b3b40" stroke-width="3"/><text x="375" y="53" text-anchor="middle" font-size="13" fill="#0b3b40">❄ 22°</text>
-  <g class="acwave" stroke="#4a90d9" stroke-width="3" fill="none"><path d="M345 70 q8 8 0 16 q-8 8 0 16"/><path d="M375 70 q8 8 0 16 q-8 8 0 16"/><path d="M405 70 q8 8 0 16 q-8 8 0 16"/></g>
-  <text x="375" y="160" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">غرفة النوم</text>
-  <path d="M580 230 A70 70 0 0 0 510 300" fill="none" stroke="#9cbab6" stroke-width="3" stroke-dasharray="5 5"/><line x1="510" y1="300" x2="580" y2="300" stroke="#0b3b40" stroke-width="6"/>
-  <rect x="540" y="184" width="30" height="20" rx="5" fill="#0b3b40"/><circle cx="550" cy="194" r="6" fill="#4a90d9"/>
-  <g class="alert"><rect x="340" y="200" width="120" height="70" rx="12" fill="#fff" stroke="#c0392b" stroke-width="3"/><text x="400" y="228" text-anchor="middle" font-size="22">📱</text><text x="400" y="256" text-anchor="middle" font-size="13" fill="#c0392b" font-weight="700">تنبيه: حركة عند الباب</text></g>
-  <text x="445" y="312" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3b40">المدخل</text>
-</svg>`,
-classroom: `<svg viewBox="0 0 600 340" role="img" aria-label="فصل ذكي فيه سبورة تفاعلية وقارئ بطاقات عند الباب وإضاءة وتكييف">
-  <rect width="600" height="340" fill="#f6efe4"/><rect y="250" width="600" height="90" fill="#e2d6c3"/>
-  <rect class="z-board" x="40" y="60" width="300" height="160" rx="8" fill="#0b3b40" stroke="#5b7376" stroke-width="4"/>
-  <polyline points="70,180 120,140 170,160 230,110 300,130" fill="none" stroke="#f2a516" stroke-width="4"/><text x="190" y="95" text-anchor="middle" font-size="16" fill="#d9f2ee">سبورة تفاعلية</text>
-  <g class="z-power" stroke="#5b7376" stroke-width="3"><rect x="380" y="20" width="160" height="34" rx="8" fill="#fff"/><text x="460" y="43" text-anchor="middle" font-size="14" fill="#0b3b40" stroke="none">❄ تكييف · 💡 إضاءة</text></g>
-  <rect x="460" y="90" width="110" height="160" rx="4" fill="#b98b5e"/><circle cx="475" cy="175" r="5" fill="#0b3b40"/>
-  <rect class="z-door" x="418" y="150" width="30" height="44" rx="6" fill="#fff" stroke="#5b7376" stroke-width="3"/><text x="433" y="178" text-anchor="middle" font-size="14">📶</text>
-  <g fill="#9cc7c2"><rect x="60" y="270" width="110" height="20" rx="4"/><rect x="230" y="270" width="110" height="20" rx="4"/><rect x="400" y="270" width="110" height="20" rx="4"/></g>
-  <g fill="#0e7c7b"><circle cx="115" cy="258" r="12"/><circle cx="285" cy="258" r="12"/><circle cx="455" cy="258" r="12"/></g>
-</svg>`,
-watch: `<svg viewBox="0 0 640 220" role="img" aria-label="ساعة صحية ترسل القراءات إلى الفريق الصحي">
-  <rect width="640" height="220" fill="#f3faf8"/>
-  <g transform="translate(520,110)"><rect x="-26" y="-90" width="52" height="180" rx="14" fill="#0b3b40"/><rect class="z-watch" x="-46" y="-46" width="92" height="92" rx="20" fill="#0e7c7b" stroke="#0b3b40" stroke-width="3"/>
-  <text y="-6" text-anchor="middle" font-size="22" fill="#fff">♥</text><text y="26" text-anchor="middle" font-size="20" font-weight="700" fill="#d9f2ee"><tspan class="hr-ok">78</tspan><tspan class="bad-hr">135</tspan></text></g>
-  <path class="z-remote link" d="M460 110 C380 40 280 40 200 100" fill="none" stroke="#9cbab6" stroke-width="5"/>
-  <text x="330" y="40" text-anchor="middle" font-size="14" fill="#5b7376">إرسال القراءات عبر الشبكة</text>
-  <g transform="translate(120,120)"><rect x="-80" y="-62" width="160" height="124" rx="14" fill="#fff" stroke="#0b3b40" stroke-width="3"/>
-  <text y="-30" text-anchor="middle" font-size="14" font-weight="700" fill="#0b3b40">الفريق الصحي</text>
-  <polyline points="-60,10 -35,10 -25,-14 -12,28 0,0 60,0" fill="none" stroke="#0e7c7b" stroke-width="3"/>
-  <rect class="z-alert" x="-66" y="34" width="132" height="22" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/><text y="50" text-anchor="middle" font-size="12" fill="#c0392b">تنبيه: قراءة مرتفعة</text></g>
-</svg>`,
-phone: `<svg viewBox="0 0 640 260" role="img" aria-label="تطبيق يطلب موافقة المستخدم على جمع بياناته ويشفرها أثناء نقلها">
-  <rect width="640" height="260" fill="#f3faf8"/>
-  <g transform="translate(470,130)"><rect x="-80" y="-120" width="160" height="240" rx="24" fill="#0b3b40"/><rect x="-70" y="-104" width="140" height="208" rx="12" fill="#fff"/>
-  <rect class="z-consent" x="-62" y="-92" width="124" height="184" rx="10" fill="#fff" stroke="#d5e3e1" stroke-width="2"/>
-  <text y="-68" text-anchor="middle" font-size="12" font-weight="700" fill="#0b3b40">تطبيق اللياقة يطلب:</text>
-  <text x="50" y="-40" font-size="12" fill="#0f2a2e">☑ معدل النبض</text><text x="50" y="-16" font-size="12" fill="#0f2a2e">☑ عدد الخطوات</text><text x="50" y="8" font-size="12" fill="#0f2a2e">☐ جهات الاتصال</text>
-  <text y="36" text-anchor="middle" font-size="11" fill="#5b7376">الغرض: متابعة نشاطك</text>
-  <rect x="-54" y="56" width="50" height="24" rx="8" fill="#0e7c7b"/><text x="-29" y="73" text-anchor="middle" font-size="12" fill="#fff">موافقة</text>
-  <rect x="4" y="56" width="50" height="24" rx="8" fill="#fff" stroke="#0e7c7b"/><text x="29" y="73" text-anchor="middle" font-size="12" fill="#0e7c7b">رفض</text></g>
-  <path class="link" d="M380 130 L170 130" stroke="#9cbab6" stroke-width="5"/>
-  <g class="lockon"><circle cx="275" cy="130" r="26" fill="#1e8e5a"/><text x="275" y="140" text-anchor="middle" font-size="24">🔒</text><text x="275" y="182" text-anchor="middle" font-size="13" fill="#1e8e5a" font-weight="700">بيانات مشفّرة أثناء النقل</text></g>
-  <g transform="translate(110,130)"><rect x="-60" y="-50" width="120" height="100" rx="14" fill="#d9f2ee"/><text y="-6" text-anchor="middle" font-size="30">🗄️</text><text y="30" text-anchor="middle" font-size="13" fill="#0b3b40">خادم التخزين</text></g>
-</svg>`,
-camera: `<svg viewBox="0 0 600 300" role="img" aria-label="كاميرا مراقبة ذكية فيها نقطتا ضعف: كلمة مرور افتراضية وبرنامج ثابت قديم">
-  <rect width="600" height="300" fill="#eef5f4"/><rect x="0" y="0" width="60" height="300" fill="#d5e3e1"/>
-  <rect x="60" y="120" width="70" height="20" fill="#7fa9a5"/>
-  <rect x="130" y="80" width="260" height="110" rx="40" fill="#fff" stroke="#0b3b40" stroke-width="4"/>
-  <circle cx="390" cy="135" r="46" fill="#0b3b40"/><circle cx="390" cy="135" r="26" fill="#0e7c7b"/><circle cx="398" cy="127" r="8" fill="#d9f2ee"/>
-  <circle cx="160" cy="110" r="6" fill="#c0392b"/>
-  <rect class="z-pw" x="170" y="150" width="170" height="30" rx="6" fill="#fff8e6" stroke="#c0392b" stroke-width="3"/>
-  <text x="255" y="171" text-anchor="middle" font-size="14" fill="#0f2a2e"><tspan class="pw-bad">🔑 admin / admin</tspan><tspan class="pw-good">🔑 •••••••• ✓</tspan></text>
-  <rect class="z-fw" x="170" y="225" width="250" height="44" rx="10" fill="#fff" stroke="#c0392b" stroke-width="3"/>
-  <text x="295" y="253" text-anchor="middle" font-size="14" fill="#0f2a2e"><tspan class="fw-bad">⚠ البرنامج الثابت: إصدار قديم 1.0</tspan><tspan class="fw-good">✓ البرنامج الثابت: آخر إصدار</tspan></text>
-  <line x1="260" y1="190" x2="260" y2="225" stroke="#9cbab6" stroke-width="3" stroke-dasharray="4 4"/>
-  <text x="500" y="60" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3b40">كاميرا مراقبة</text><text x="500" y="82" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3b40">متصلة بالشبكة</text>
-</svg>`
+const STAGES = [
+  {k:"A", id:"analysis", ch:"A", ar:"التحليل", en:"Analysis", part:"الجزء الأول · التحليل والتخطيط",
+   desc:"جمع أدلة عن المشكلة التعليمية والمتعلمين والموارد قبل اقتراح الحل.", tools:["gemini","humata","better"]},
+  {k:"D1", id:"design", ch:"D", ar:"التصميم", en:"Design", part:"الجزء الأول · التحليل والتخطيط",
+   desc:"تحويل نتائج التحليل إلى أهداف وأنشطة ووسائط وتقويم متسقة.", tools:["chatgpt","magic"]},
+  {k:"D2", id:"development", ch:"D", ar:"التطوير", en:"Development", part:"الجزء الثاني · إنتاج المحتوى والوسائط",
+   desc:"تحويل مخطط التصميم إلى محتوى ووسائط قابلة للاستخدام والمراجعة.", tools:["gamma","leonardo","fliki","eleven"]},
+  {k:"I", id:"implementation", ch:"I", ar:"التنفيذ", en:"Implementation", part:"الجزء الثالث · التقييم والتغذية الراجعة",
+   desc:"إتاحة التعلم ومتابعة المشاركة والتفاعل أثناء التطبيق.", tools:["curipod"]},
+  {k:"E", id:"evaluation", ch:"E", ar:"التقويم", en:"Evaluation", part:"الجزء الثالث · التقييم والتغذية الراجعة",
+   desc:"قياس أداء المتعلم وتحليل الأدلة وتوجيه التحسين.", tools:["questionwell","wayground"]}
+];
+
+const T = {
+gemini:{n:"01",name:"Gemini Notebook",prev:"NotebookLM",short:"اسأل مصادرك واحصل على ملخصات مدعومة بإحالات.",
+ def:"مساعد بحث وتعلّم من Google ينظّم المصادر التي يضيفها المستخدم، ويتيح طرح الأسئلة عنها وإنتاج ملخصات مدعومة بإحالات. يفيد في فهم وثائق المقررات وتحليل المعطيات قبل اتخاذ قرارات التصميم التعليمي.",
+ uses:["فحص وثائق مقرر لاستخراج الفجوات بين الأهداف والموضوعات والتقويم.","مقارنة وصف المقرر بتقارير ملاحظات التدريس ومصادر أخرى.","تسجيل الأسئلة التي تتطلب جمع بيانات إضافية من المتعلمين."],
+ steps:["افتح الرابط الرسمي وسجّل الدخول بحساب Google المناسب.","اختر إنشاء دفتر جديد (New notebook) ثم إضافة مصادر (Add sources).","أضف نسخة مصرحًا بمشاركتها من وصف المقرر أو ملف PDF؛ تجنب البيانات الشخصية.","اكتب السؤال الموجود في المثال داخل المحادثة المرتبطة بالدفتر.","اقرأ الملخص وافتح الإحالات إلى المصادر لتتأكد مما ورد فيها، ثم دوّن الفجوات المؤكدة."],
+ sc:"يريد مصمم تعليمي فحص وصف مقرر جامعي ومقارنته بمعايير مخرجات التعلم قبل إعادة تصميمه.",
+ pr:"اعتمد على وصف المقرر ومعايير المخرجات المرفقة فقط. أنشئ جدولًا يبيّن: المخرج التعليمي، الموضوع الذي يدعمه، وأي فجوة ظاهرة في التغطية. أورد شاهدًا من المصدر لكل ملاحظة، وميّز بين الفجوة المثبتة والسؤال الذي يحتاج إلى تحقق.",
+ out:"جدول اتساق أولي يساعد في توجيه التحليل، لا حكم نهائي على جودة المقرر.",
+ pros:["جمع مصادر مختلفة في دفتر واحد مع إحالات تساعد على التحقق.","إمكان سؤال الملفات ومقارنة الأفكار دون إعادة قراءتها كاملة."],
+ cons:["الرد يتأثر بصحة المصادر وجودتها، وقد يسيء فهم بعض الملفات.","حدود المصادر والميزات تختلف حسب الحساب والخطة."],
+ ben:"يساعد في ربط كل استنتاج بدليل من وثائق المقرر.", lim:"لا يحل محل تحليل المتعلمين ومقابلة أصحاب المصلحة.",
+ info:["خدمة أساسية مجانية، وترتفع حدود الاستخدام في خطط Google AI أو Workspace المؤهلة؛ سعر الترقية بحسب نوع الحساب والمنطقة.","إضافة مصادر ومحادثتها بحدود تختلف بحسب الخطة.","يدعم الأسئلة والمصادر العربية؛ تُراجع جودة الاستشهادات العربية.","حساب Google واتصال بالإنترنت.","ملاحظات ومخرجات قابلة للنسخ أو المشاركة حسب الوظيفة والحساب."],
+ links:["https://notebook.google.com/","https://support.google.com/gemininotebook/answer/16215270","https://support.google.com/gemininotebook/answer/16213268"]},
+humata:{n:"02",name:"Humata",short:"ارفع وثائق طويلة واسأل عن محتواها مباشرة.",
+ def:"أداة ذكاء اصطناعي للتعامل مع الملفات والمستندات؛ تسمح برفع وثائق طويلة وطرح أسئلة عن محتواها مع العودة إلى مواضع ذات صلة. تفيد في تحليل المعايير والتقارير المرتبطة بالتصميم التعليمي.",
+ uses:["استخراج معايير الجودة من دليل مؤسسي طويل.","تلخيص متطلبات اعتماد مقرر إلكتروني قبل تصميمه.","تحديد عبارات تحتاج إلى تفسير أو توضيح من خبير المحتوى."],
+ steps:["افتح Humata وأنشئ حسابًا أو سجّل الدخول.","انتقل إلى مساحة الملفات، ثم اختر رفع ملف (Upload) أو اسحبه إلى مساحة الرفع.","انتظر ظهور الملف في القائمة، وافتح خيار السؤال عنه (Ask) إن ظهر في حسابك.","اكتب سؤالًا محددًا عن أحد المعايير كما في المثال.","قارن الإجابة بنص المعيار في الملف الأصلي، ثم لخّص المتطلبات في قائمة مراجعة."],
+ sc:"يحتاج مصمم إلى استخراج المتطلبات التربوية والتقنية من دليل معايير جودة للمقررات الإلكترونية.",
+ pr:"من دليل المعايير المرفق فقط: استخرج المعايير التي تتعلق بوضوح الأهداف، وإرشادات المتعلم، والتفاعل، والتقويم. ضع اسم المعيار ومتطلبه الأساسي وشاهدًا نصيًا قصيرًا أو رقم الصفحة. لا تضف معايير غير موجودة.",
+ out:"قائمة مراجعة أولية مرتبة بحسب المعايير مع إشارات إلى مواضعها الأصلية.",
+ pros:["سهولة السؤال عن محتوى ملفات طويلة.","إرجاع معلومات مرتبطة بالمستند بدلًا من البحث اليدوي في كل صفحة."],
+ cons:["بعض المزايا مثل OCR وحدود الاستخدام ترتبط بالخطة.","لا تضمن الإجابات صحة تفسير المعيار في كل مرة."],
+ ben:"يسهّل تحويل دليل الجودة إلى متطلبات عمل قابلة للفحص.", lim:"اعتماد التفسير النهائي للمعايير يظل من مسؤولية المختص.",
+ info:["مجاني: 0 دولار؛ خطة Expert نحو 9.99 دولارات شهريًا بحسب صفحة الأسعار الرسمية.","نحو 60 صفحة مجانية شهريًا؛ وتظهر حدود إضافية للإجابات في بعض صفحات الخدمة.","يمكن تجربة الملفات العربية، لكن دقة تحليل تنسيقها تحتاج اختبارًا.","حساب واتصال بالإنترنت وملفات بصيغ مدعومة.","نسخ الملخص أو مشاركته؛ خيارات التصدير المتاحة تُفحص من الحساب."],
+ links:["https://www.humata.ai/","https://docs.humata.ai/guides/readme/how-to-upload","https://www.humata.ai/pricing"]},
+better:{n:"03",name:"Better Analyst",short:"حلّل بيانات الاستبانات بأسئلة بلغة طبيعية.",
+ def:"منصة لتحليل ملفات البيانات والجداول باستخدام أسئلة بلغة طبيعية، وإنشاء ملخصات ورسوم ولوحات معلومات. تساعد المصمم التعليمي في استكشاف نتائج الاستبانات ومؤشرات الأداء قبل اتخاذ قرارات التحسين.",
+ uses:["تحليل بيانات استبانة الاحتياجات التدريبية.","مقارنة متوسطات محاور أداة جمع البيانات.","إنتاج رسم بسيط يعرض أولويات التحسين للمناقشة."],
+ steps:["افتح Better Analyst وسجّل الدخول إلى حسابك.","ابدأ تحليلًا جديدًا، ثم ارفع ملف بيانات تجريبيًا CSV أو Excel أو اربط مصدرًا مدعومًا.","راجع أسماء الأعمدة وتأكد من أنها تصف الاستجابات بصورة صحيحة.","اكتب طلب التحليل المحدد في المثال، ثم انتظر جدول النتائج أو الرسم.","تحقق من العمليات الحسابية والقيم المفقودة قبل نقل النتائج إلى تقرير التحليل."],
+ sc:"جمع الفريق استبانة من 30 مشاركًا عن الحاجة إلى تدريب على إنتاج المحتوى التفاعلي، ويريد تحديد أكثر المهارات احتياجًا.",
+ pr:"حلّل بيانات الاستبانة المرفقة بعد إزالة بيانات المشاركين. احسب عدد الاستجابات الصالحة ومتوسط كل مهارة، ثم رتّب المهارات من الأعلى احتياجًا إلى الأقل وفق مقياس الاستبانة. أنشئ رسم أعمدة، واذكر القيم المفقودة وطريقة الحساب.",
+ out:"جدول أولويات ومخطط يوضح المهارات الأكثر احتياجًا للتدريب، مع ضرورة مراجعة التفسير.",
+ pros:["تحويل أسئلة تحليل البيانات إلى رسوم ومؤشرات.","التعامل مع مصادر بيانات وجداول دون اشتراط كتابة صيغ معقدة."],
+ cons:["الحدود وعدد الرسائل والملفات تختلف بحسب الاشتراك.","قد يخطئ في تفسير مقياس الاستجابة أو الأرقام غير النظيفة."],
+ ben:"يعزز الاستناد إلى بيانات فعلية عند تحديد أولويات التدريب.", lim:"لا يُرفع إليه ملف يحوي معلومات طلاب شخصية دون تصريح ومراجعة سياسة الخصوصية.",
+ info:["خطة مجانية؛ خطط مدفوعة شهرية. تظهر على صفحات الشركة أسعار وخطط مختلفة؛ يُؤخذ السعر النهائي من شاشة الاشتراك قبل الدفع.","محدودية في الرسائل أو أرصدة التحليل والمصادر المتصلة.","يمكن كتابة طلبات بالعربية؛ تحقق من فهم أسماء الأعمدة العربية.","حساب وملف بيانات منظم ومسموح استخدامه.","جداول ورسوم وتقارير بحسب وظيفة التحليل والخطة."],
+ links:["https://betteranalyst.com/","https://betteranalyst.com/product","https://betteranalyst.com/pricing"]},
+chatgpt:{n:"04",name:"ChatGPT",short:"صياغة الأهداف والأنشطة ومراجعة الاتساق البنائي.",
+ def:"مساعد ذكاء اصطناعي حواري يساعد على صياغة النصوص وتحليل المعلومات وتطوير الأفكار ومراجعتها. يمكن توظيفه في التصميم التعليمي لبناء أهداف وأنشطة وأدوات تقويم متسقة بعد تقديم السياق والمعايير.",
+ uses:["صياغة أهداف قابلة للقياس وربطها بالأنشطة.","اقتراح تسلسل المحتوى وفق خصائص الفئة المستهدفة.","مراجعة الاتساق بين الأهداف والتدريس والتقويم."],
+ steps:["افتح ChatGPT وسجّل الدخول أو استخدم طريقة الدخول المتاحة.","ابدأ محادثة جديدة وحدد الفئة العمرية والموضوع والزمن والمخرج المطلوب.","انسخ الطلب الموجود في المثال إلى مربع المحادثة ثم أرسله.","اقرأ جدول الأهداف والأنشطة والتقويم، وحدد ما يحتاج إلى تعديل.","اطلب تصحيح المواضع غير المتسقة ثم اعتمد النسخة بعد مراجعتك العلمية والتربوية."],
+ sc:"يصمم فريق تعليمي وحدة في الثقافة المالية لطلاب المرحلة المتوسطة عن إعداد ميزانية شخصية بسيطة.",
+ pr:"أنت مساعد لمصمم تعليمي. اقترح خطة أولية لوحدة مدتها حصتان عن الميزانية الشخصية لطلاب المرحلة المتوسطة. صُغ ثلاثة أهداف سلوكية قابلة للقياس، واربط بكل هدف نشاطًا مناسبًا وأداة تقويم تقيسه مباشرة. اعرضها في جدول، وأشر إلى أي افتراض يحتاج إلى تحقق.",
+ out:"جدول أولي للأهداف والأنشطة وطرق التقويم، يُراجع قبل دمجه في السيناريو التعليمي.",
+ pros:["المرونة في الحوار وإعادة الصياغة وفق تعليقات المستخدم.","إمكان إنتاج جداول ونصوص ومقارنات وأفكار متنوعة."],
+ cons:["قد يقدم معلومات خاطئة أو أهدافًا غير قابلة للقياس.","بعض النماذج والميزات محدودة على الخطة المجانية."],
+ ben:"يدعم بناء الاتساق البنائي إذا حدد المصمم المطلوب بوضوح.", lim:"لا يتخذ قرار التصميم بدلًا من المختص ولا يستبدل التحقق من المنهج.",
+ info:["خطة مجانية؛ Plus بسعر 20 دولارًا شهريًا في صفحة المساعدة الرسمية، مع خطط أخرى.","الرسائل والملفات وبعض أدوات التوليد محدودة بحسب الخطة.","يدعم كتابة النصوص والمحادثة بالعربية.","متصفح أو تطبيق مدعوم؛ تسجيل الدخول لبعض الميزات.","نسخ النصوص ومشاركة المحادثة أو تنزيل الملفات عند توافر الميزة."],
+ links:["https://chatgpt.com/","https://help.openai.com/en/articles/8313929-getting-started-with-chatgpt-as-an-educator","https://chatgpt.com/pricing/"]},
+magic:{n:"05",name:"MagicSchool AI",short:"أدوات جاهزة لتخطيط الدروس والتمايز والتقويم.",
+ def:"منصة ذكاء اصطناعي موجهة للعاملين في التعليم تضم أدوات لتخطيط الدروس والأنشطة والتمايز والتقويم. تساعد في إعداد مسودات تعليمية يمكن للمصمم تعديلها بحسب المتعلمين والمنهج.",
+ uses:["إعداد خطة درس متعددة المستويات.","اقتراح أنشطة دعم وإثراء للمتعلمين المختلفين.","تحويل هدف تعليمي إلى إجراءات وتقويم سريع."],
+ steps:["افتح MagicSchool وأنشئ حسابًا للمعلم أو سجّل الدخول.","ابحث عن أداة خطة الدرس (Lesson Plan) من قائمة الأدوات.","أدخل الموضوع والصف والزمن والهدف في الحقول المتاحة.","اضغط زر التوليد (Generate) أو ما يماثله في الواجهة، ثم اقرأ خطة الدرس.","راجع مناسبة الأنشطة والتمايز والتقويم، وعدّل الناتج قبل استخدامه."],
+ sc:"يريد المصمم إعداد خطة درس للصف الخامس عن جمع الكسور ذات المقامات المتشابهة تراعي المتعلمين الذين يحتاجون إلى دعم.",
+ pr:"أنشئ خطة درس مدتها 35 دقيقة للصف الخامس عن جمع الكسور ذات المقامات المتشابهة. الهدف: أن يجمع المتعلم كسرين جمعًا صحيحًا ويشرح خطوته. أضف نشاطًا بالوسائل البصرية، ومسار دعم، ومهمة إثرائية، وسؤال خروج يقيس الهدف.",
+ out:"مسودة خطة درس متمايزة تتطلب مراجعة مستوى الصعوبة والمصطلحات العربية.",
+ pros:["مجموعة أدوات تعليمية متخصصة بدل قالب محادثة عام.","نماذج عمل مناسبة لتخطيط الدروس ومهام المعلم."],
+ cons:["بعض الميزات وسجل المخرجات متاحان بخطة Plus.","قد لا تطابق المسودة منهجًا محليًا أو اصطلاحات عربية دقيقة."],
+ ben:"يساعد في التفكير في احتياجات فئات المتعلمين المختلفة.", lim:"لا يُعتمد التمايز المقترح دون بيانات عن المتعلمين والوقت الحقيقي.",
+ info:["Free مجانًا؛ Plus نحو 12.99 دولارًا شهريًا أو 8.33 دولارات شهريًا عند الدفع السنوي.","أدوات أساسية للمعلم مع حدود تختلف عن Plus.","جرّب إنتاج المحتوى العربي وتحقق من صيغ المسائل والمصطلحات.","حساب واتصال بالإنترنت؛ موجه أساسًا للمعلمين والمؤسسات التعليمية.","نسخ المحتوى أو استخدام وظائف المشاركة المتاحة حسب الحساب."],
+ links:["https://www.magicschool.ai/","https://www.magicschool.ai/tools/lesson-plan","https://www.magicschool.ai/pricing"]},
+gamma:{n:"06",name:"Gamma",short:"حوّل السيناريو المكتوب إلى عرض تعليمي بصري.",
+ def:"منصة لإنشاء عروض تقديمية ومستندات ومحتوى مرئي اعتمادًا على تعليمات نصية أو مخطط جاهز، مع إمكان تعديل البطاقات وتصديرها. تدعم إنتاج نموذج عرض تعليمي بصري من سيناريو معتمد.",
+ uses:["تحويل مخطط علمي إلى عرض تعليمي مرتب.","إعداد بطاقات تتضمن نصوصًا قصيرة وصورًا مناسبة.","مشاركة العرض أو تصديره للمراجعة والتدريس."],
+ steps:["افتح Gamma وسجّل الدخول إلى حسابك.","من صفحة Gamma، اكتب وصف العرض في مربع إنشاء المحتوى، أو الصق المخطط الجاهز.","حدد المرحلة التعليمية واللغة وعدد البطاقات في طلبك، وراجع خطة الإنشاء قبل التنفيذ إن ظهرت.","أنشئ العرض ثم حرّر العناوين والمحتوى والصور وأحجام الخطوط.","عاين العرض على جهازين، ثم استخدم مشاركة أو تصدير (Export) حسب الخطة."],
+ sc:"يحتاج المصمم إلى إعداد عرض من ست بطاقات عن مصادر الطاقة المتجددة لطلاب المرحلة المتوسطة.",
+ pr:"أنشئ مسودة عرض عربي من 6 بطاقات عن الطاقة الشمسية والرياح والمياه للمرحلة المتوسطة. ابدأ بهدف تعليمي واضح، ثم بطاقة تعريف، وثلاث بطاقات مقارنة مزودة بمثال يومي، وبطاقة خلاصة وسؤال تفكير. استخدم نقاطًا قصيرة، ولا تختلق بيانات رقمية.",
+ out:"عرض بصري أولي جاهز للتحرير العلمي واللغوي قبل مشاركته.",
+ pros:["إنشاء مخطط عرض كامل بسرعة وتعديله.","خيارات مشاركة وتصدير متعددة."],
+ cons:["حدود الأرصدة والشرائح والعلامة التجارية تتغير مع الخطط.","قد يحتاج تنسيق العربية والوسائط إلى تعديل يدوي."],
+ ben:"يختصر تحويل السيناريو المكتوب إلى تجربة عرض مرئي.", lim:"جمال العرض لا يضمن حسن التسلسل أو خلوه من الحمل المعرفي.",
+ info:["خطة مجانية؛ تظهر Plus وPro بخطط شهرية/سنوية، ويؤكد السعر عند اختيار نوع الفوترة في الموقع.","حتى 10 بطاقات لكل طلب وبعض الأرصدة الأولية؛ قد تظهر علامة Gamma.","يمكن إنشاء نص عربي؛ تُراجع المحاذاة والاتجاه بعد التصدير.","حساب ومتصفح متصل بالإنترنت.","تصدير إلى PDF أو PPTX أو PNG وطرق مشاركة أخرى وفق الخطة."],
+ links:["https://gamma.app/","https://help.gamma.app/en/articles/15002203-how-do-i-create-with-agent-in-gamma","https://gamma.app/pricing"]},
+leonardo:{n:"07",name:"Leonardo AI",short:"ولّد صورًا ورسومًا توضيحية أصلية للمفاهيم.",
+ def:"منصة لتوليد الصور والرسوم بالذكاء الاصطناعي انطلاقًا من أوصاف نصية، مع خيارات تعديل النتيجة بحسب النماذج المتاحة. تفيد في إنتاج صور توضيحية أصلية للمواد التعليمية.",
+ uses:["إنتاج رسم يشرح مفهومًا علميًا يصعب تصويره.","توفير صورة افتتاحية مناسبة لدرس رقمي.","إنشاء بدائل بصرية يُختار منها ما يحقق هدف التعلم."],
+ steps:["افتح Leonardo AI وسجّل الدخول إلى حسابك.","انتقل إلى مساحة توليد الصور (Image Generation) أو خيار الإنشاء المقابل.","أدخل وصفًا دقيقًا للموضوع والعناصر المطلوبة ونمط الصورة؛ استخدم المثال.","اختر المقاس والنموذج المتاح إن ظهرا ثم اضغط زر التوليد.","افحص الدقة العلمية للصورة، وعدّل الوصف عند الحاجة ثم نزّل النتيجة المسموح بها."],
+ sc:"يريد المصمم رسمًا مبسطًا لدورة الماء للصف الرابع من دون نصوص مضمنة قد تظهر بأخطاء.",
+ pr:"A clean educational illustration of the water cycle for primary students: ocean, sunlight, evaporation rising as vapor, cloud condensation, precipitation over hills and collection back to a lake. Clear visual flow, no labels, no letters, no logos, flat vector style, 16:9.", ltr:true,
+ out:"رسم توضيحي لدورة الماء يضيف إليه المصمم التسميات العربية الصحيحة خارج أداة التوليد.",
+ pros:["تنوع أساليب التوليد والنماذج المرئية.","إمكان إعادة توليد بدائل بسرعة."],
+ cons:["الأرصدة والنماذج تختلف بحسب الاشتراك.","قد تُظهر الصور تفاصيل علمية غير دقيقة؛ والإنشاءات المجانية قد تكون عامة."],
+ ben:"يساعد في إعداد تمثيل بصري للمفاهيم المجردة.", lim:"لا تُستخدم الصورة العلمية قبل مراجعة ترتيب الظواهر والعلاقات.",
+ info:["Free مجانًا؛ Essential نحو 12 دولارًا شهريًا، وPremium نحو 30 دولارًا شهريًا وفق التسعير الشهري المعلن.","نحو 150 رصيد توليد سريع يوميًا في الخطة المجانية؛ وقد تكون الصور عامة.","يمكن إدخال أوصاف عربية، وقد تفيد الإنجليزية لبعض النماذج؛ تُتجنب الكتابة داخل الصور.","حساب ومتصفح؛ الميزات تختلف بالنموذج والخطة.","تنزيل الصور المتاحة؛ المقاسات والصيغ تعتمد على الحساب والمهمة."],
+ links:["https://leonardo.ai/","https://intercom.help/leonardo-ai/en/articles/8942360-how-to-generate-images-with-leonardo-ai","https://leonardo.ai/pricing"]},
+fliki:{n:"08",name:"Fliki",short:"حوّل النص إلى فيديو تعليمي قصير بتعليق صوتي.",
+ def:"منصة لتحويل النصوص والأفكار إلى فيديوهات تتضمن مشاهد وتعليقًا صوتيًا ووسائط بصرية، مع خيارات تحرير وتصدير. يمكن توظيفها في إنتاج فيديو تعليمي قصير من سيناريو مُراجع.",
+ uses:["تحويل سيناريو قصير إلى فيديو تعليمي.","مطابقة مشاهد الفيديو مع التعليق الصوتي.","إعداد نسخة مرئية للمراجعة قبل النشر."],
+ steps:["افتح Fliki وأنشئ حسابًا أو سجّل الدخول.","اختر إنشاء مشروع فيديو من نص (Text to Video) أو الخيار الأقرب في واجهتك.","أدخل النص مقسومًا إلى مشاهد قصيرة، ثم حدد اللغة والصوت المناسبين إن توفرا.","راجع الوسائط المقترحة وعدّل كل مشهد ومدة ظهوره والتعليق الصوتي.","عاين الفيديو كاملًا ثم صدّره بالجودة المتاحة، وافحص العلامة المائية والترخيص."],
+ sc:"مطلوب فيديو مدته دقيقة يوضح ثلاث قواعد للسلامة أثناء تجربة عملية في المختبر المدرسي.",
+ pr:"أنشئ فيديو توعويًا عربيًا من ثلاثة مشاهد عن سلامة المختبر للمرحلة المتوسطة: ارتداء نظارات الحماية، عدم خلط المواد دون توجيه، والتعامل الآمن مع الأدوات الساخنة. اجعل كل مشهد قصيرًا مع تعليق واضح وخاتمة تذكّر بطلب مساعدة المعلم.",
+ out:"فيديو أولي للمراجعة قد يحتاج تعديل الصور أو أصوات النطق وتسلسل المشاهد.",
+ pros:["تحويل النص إلى فيديو بوسائط وصوت في واجهة واحدة.","التحرير بحسب المشاهد يسهّل ضبط زمن الشرح."],
+ cons:["الخطة المجانية قصيرة وفيها علامة مائية.","الوسائط الآلية قد لا تمثل إجراءات السلامة بدقة."],
+ ben:"يوفر نموذجًا سريعًا للشرح المرئي قبل الإخراج النهائي.", lim:"يجب مراجعة المشاهد الخطرة علميًا وتربويًا وعدم تقديمها دون ضبط.",
+ info:["خطة مجانية؛ خطتا Standard وPremium مدفوعتان، وتتغير الأسعار حسب اختيار الدفع الشهري أو السنوي.","نحو 3 أرصدة شهريًا؛ فيديو بمدة محدودة حتى دقيقة وبعلامة Fliki مائية.","تتوفر لغات وأصوات متعددة، ويُختبر النطق العربي وجودته.","حساب ومتصفح متصل بالإنترنت.","فيديو حسب دقة الخطة؛ المجاني قد يقتصر على 720p مع علامة مائية."],
+ links:["https://fliki.ai/","https://fliki.ai/ar/features/text-to-video","https://fliki.ai/pricing"]},
+eleven:{n:"09",name:"ElevenLabs",short:"أنتج تعليقًا صوتيًا عربيًا من نص مكتوب.",
+ def:"منصة لتوليد الكلام من النص باستخدام أصوات اصطناعية، مع خيارات للغة والنبرة والنطق بحسب النموذج. تفيد في إنتاج تعليق صوتي يرافق الفيديوهات والشروح والمواد التعليمية.",
+ uses:["تسجيل تعليق صوتي لشرح تعليمي قصير.","إنتاج نسخة صوتية لإرشادات الوصول إلى المحتوى.","مقارنة أكثر من صوت لاختيار أوضحها للفئة المستهدفة."],
+ steps:["افتح ElevenLabs وسجّل الدخول إلى حسابك.","اختر تحويل النص إلى كلام (Text to Speech).","الصق النص العربي المراجع، واختر الصوت والنموذج واللغة إن ظهرت هذه الخيارات.","اضغط زر التوليد أو الاستماع، ثم استمع إلى النطق والأرقام والوقفات.","عدّل علامات الترقيم أو النص، وأعد التوليد ثم حمّل الصوت وفق صلاحيات الحساب."],
+ sc:"يريد المصمم تعليقًا صوتيًا مدته نصف دقيقة يشرح كيفية بدء التعلم الذاتي داخل منصة مقرر إلكتروني.",
+ pr:"مرحبًا بك في المقرر. ابدأ بالاطلاع على الأهداف، ثم افتح الوحدة الأولى وتابع الشرح بالترتيب. بعد كل درس، راجع المثال التطبيقي ثم نفّذ مهمة التحقق من فهمك. إذا واجهتك مشكلة تقنية، استخدم صفحة المساعدة أو تواصل مع الميسر.",
+ out:"ملف صوتي عربي متزن يناسب إرشادات المنصة بعد التدقيق السمعي.",
+ pros:["تنوع الأصوات وإعدادات النطق.","إمكان إعادة تسجيل نص معدل دون استوديو صوتي."],
+ cons:["عدد الأرصدة والتراخيص والميزات يتغير بحسب الخطة.","النطق العربي للأسماء والأرقام قد يحتاج ضبطًا."],
+ ben:"يدعم إعداد شروح صوتية للمستخدمين الذين يفضلون الاستماع.", lim:"لا يعوّض تصميم إمكانية الوصول مثل النص المصاحب للصوت.",
+ info:["Free مجانًا؛ Starter نحو 6 دولارات شهريًا بعد العرض الترويجي، وCreator نحو 22 دولارًا شهريًا.","نحو 10 آلاف رصيد شهريًا في الخطة المجانية.","يدعم التوليد الصوتي متعدد اللغات ومنها العربية، مع مراجعة النطق.","حساب ومتصفح أو واجهة تطبيق تدعم الميزة.","ملفات صوتية وفق صيغة وإعدادات الخطة؛ تختلف تراخيص الاستخدام التجاري."],
+ links:["https://elevenlabs.io/","https://elevenlabs.io/docs/overview/capabilities/text-to-speech","https://elevenlabs.io/pricing"]},
+curipod:{n:"10",name:"Curipod",short:"قدّم درسًا تفاعليًا واجمع استجابات المتعلمين فورًا.",
+ def:"منصة تساعد على عرض دروس تفاعلية تجمع شرائح المحتوى واستجابات المتعلمين والأسئلة الفورية، مع بعض المزايا المدعومة بالذكاء الاصطناعي. تفيد في تنفيذ الخبرة التعليمية وملاحظة المشاركة أثناء التطبيق.",
+ uses:["إدارة نشاط تفاعلي ضمن درس قائم.","جمع تفسيرات المتعلمين أو إجاباتهم بشكل فوري.","تكييف شرح الميسر بعد رؤية الاستجابات."],
+ steps:["افتح Curipod وسجّل الدخول بحساب مقدم الدرس.","أنشئ درسًا جديدًا أو افتح درسًا مُعدًا مسبقًا، ثم أضف شريحة وسؤالًا.","اكتب التعليمات وسؤال المناقشة المناسب للمحتوى، ثم راجع الصياغة.","ابدأ العرض المباشر وشارك رمز الانضمام مع المشاركين؛ اختبره من جهاز آخر.","استعرض الإجابات المجمعة وناقشها، ثم دوّن ما يحتاج إلى تحسين في الدرس."],
+ sc:"أثناء درس عن الاستدامة البيئية يريد الميسر معرفة حلول الطلاب المقترحة لخفض النفايات في المدرسة.",
+ pr:"أنشئ نشاط مشاركة قصيرة بعنوان «مدرستنا أقل نفايات». ابدأ بسؤال استطلاع عن أكثر مصدر للنفايات في المدرسة، ثم سؤال إجابة قصيرة يطلب حلًا قابلًا للتنفيذ خلال أسبوع. اجعل الصياغة مناسبة للمرحلة المتوسطة، وخصص وقتًا للمناقشة.",
+ out:"شاشتا مشاركة واستجابات تمكنان الميسر من إدارة نقاش مبني على أفكار المتعلمين.",
+ pros:["دمج العرض والأسئلة وجمع الردود في جلسة واحدة.","إمكان رؤية اتجاهات المشاركة بسرعة."],
+ cons:["يحتاج إلى اتصال وأجهزة وإدارة للوقت.","توافر بعض الأنشطة والمزايا المؤتمتة مرتبط بالحساب أو المؤسسة."],
+ ben:"يساعد المصمم في اختبار قابلية النشاط للتنفيذ والتفاعل.", lim:"تفاعل المتعلمين لا يثبت وحده تحقق نواتج التعلم.",
+ info:["خطة للمعلمين مجانية (0 دولار/شهر)؛ خطط المدارس والمؤسسات بعروض أسعار مخصصة.","مجموعة من أنشطة الدرس والمشاركة؛ بعض خصائص المؤسسة غير مشمولة.","قد يدعم إدخال محتوى عربي؛ تُختبر المحاذاة والتغذية الراجعة لكل نشاط.","حساب لمقدم الدرس ورابط/رمز انضمام وأجهزة للمشاركين.","مشاركة الدرس والاستجابات وفق إمكانات الخطة."],
+ links:["https://curipod.com/","https://help.curipod.com/en/articles/739580-how-do-i-teach-a-lesson-in-curipod","https://curipod.com/lang/ar-AE/pricing"]},
+questionwell:{n:"11",name:"QuestionWell",short:"ابنِ بنك أسئلة أوليًا من نص أو موضوع.",
+ def:"أداة لإنشاء أسئلة وأنشطة تقويمية بالذكاء الاصطناعي من موضوع أو نص أو رابط، مع إمكان مراجعة الأسئلة وتعديلها وتصديرها. تفيد في إعداد بنك أسئلة أولي مرتبط بنواتج التعلم.",
+ uses:["صياغة أسئلة متنوعة انطلاقًا من مادة علمية.","مراجعة ارتباط السؤال بالهدف التعليمي.","تجهيز أسئلة قابلة للتعديل والاستيراد إلى أدوات أخرى."],
+ steps:["افتح QuestionWell وسجّل الدخول.","انتقل إلى إنشاء مجموعة أسئلة وأدخل موضوعًا أو نصًا أو ملفًا مسموحًا باستخدامه.","حدد عدد الأسئلة ونوعها ومستوى المتعلمين واللغة من الخيارات المتاحة.","اضغط توليد الأسئلة (Generate Questions) أو ما يماثله.","راجع كل سؤال وإجابته، ثم اختر الأسئلة الصالحة وحرّرها وصدّرها بالصيغ المتاحة."],
+ sc:"يريد المصمم إعداد أسئلة تقويم بنائي لطلبة ماجستير التصميم التعليمي عن مبادئ نظرية الحمل المعرفي.",
+ pr:"أنشئ ستة أسئلة باللغة العربية تقيس تطبيق مبادئ الحمل المعرفي في تصميم شاشة تعليمية. استخدم سيناريوهات قصيرة، وأربعة بدائل لكل سؤال، واذكر الإجابة الصحيحة وتبريرها. تجنب الأسئلة التي تكتفي بتعريف المصطلح.",
+ out:"مجموعة أسئلة أولية تحوي مواقف تصميمية، تحتاج مراجعة تخصصية قبل استخدامها.",
+ pros:["توليد الأسئلة من مصادر متنوعة مع إمكان تحريرها.","خيارات مشاركة أو تصدير تسهّل إعادة الاستخدام."],
+ cons:["بعض أنواع الأسئلة والتصدير متاح في Premium.","قد تكون البدائل ضعيفة أو الأجوبة قابلة للنقاش."],
+ ben:"يوفر نقطة انطلاق لبناء أسئلة أعلى من مستوى التذكر.", lim:"صلاحية السؤال وصدقه ومستوى صعوبته لا تُحسم آليًا.",
+ info:["خطة مجانية؛ Premium نحو 5.83 دولارات شهريًا عند دفع 70 دولارًا سنويًا؛ راجع خيار الفوترة الشهري بالموقع.","أسئلة اختيار من متعدد ونقاش بميزات محدودة مقارنة بالمدفوع.","يمكن اختيار اللغة بحسب قائمة اللغات المتاحة؛ يختبر الفريق العربية عمليًا.","حساب واتصال بالإنترنت ومصدر/موضوع واضح.","خيارات تصدير متعددة؛ تتغير بحسب نوع السؤال والخطة."],
+ links:["https://questionwell.org/","https://questionwell.org/features","https://app.questionwell.org/pricing"]},
+wayground:{n:"12",name:"Wayground",prev:"Quizizz",short:"طبّق اختبارات تفاعلية واقرأ تقارير الإجابات.",
+ def:"منصة لإنشاء الاختبارات والأنشطة التفاعلية وتطبيقها، مع وظائف مدعومة بالذكاء الاصطناعي في توليد المحتوى. توفر تقارير عن إجابات المتعلمين تساعد على متابعة الأداء والتغذية الراجعة.",
+ uses:["إعداد اختبار قصير يتضمن مسائل تطبيقية.","تنفيذ اختبار مباشر أو ذاتي بحسب الإعدادات.","قراءة تقارير الإجابات لتحديد الأخطاء الشائعة."],
+ steps:["افتح Wayground وسجّل الدخول إلى حساب المعلم.","اختر إنشاء تقييم جديد (Assessment/Quiz) ثم التوليد بالذكاء الاصطناعي إذا كان متاحًا.","اكتب موضوع الاختبار والفئة المستهدفة، أو أضف مصدرًا مناسبًا.","راجع الأسئلة والبدائل والتغذية الراجعة، ثم احفظ التقييم وانشر رمز المشاركة.","بعد مشاركة المتعلمين، افتح التقرير وحدد أكثر الأخطاء تكرارًا قبل التخطيط للتغذية الراجعة."],
+ sc:"بعد تدريس النسب المئوية للصف السابع، يريد المصمم معرفة ما إذا كانت الأخطاء تتركز في حساب الخصم أم في تفسيره.",
+ pr:"أنشئ اختبارًا قصيرًا من خمس مسائل تطبيقية عن النسب المئوية لطلاب الصف السابع: سؤالان عن الخصم، وسؤالان عن الزيادة، وسؤال تفسير واحد عن معنى النسبة. قدّم أربعة بدائل لكل مسألة وإجابة صحيحة مع تفسير مختصر، ثم اعرضها للمراجعة.",
+ out:"اختبار أولي وتقرير إجابات بعد التطبيق يوجهان خطة التغذية الراجعة.",
+ pros:["تنفيذ التقييم وجمع النتائج في منصة واحدة.","تقارير إجابات تسهّل رصد الأنماط العامة للأخطاء."],
+ cons:["بعض أنواع الأسئلة والتحليلات المتقدمة تحتاج خطة مدفوعة.","تقارير الأداء لا تكشف وحدها سبب الخطأ."],
+ ben:"يساعد على توجيه التقويم اللاحق إلى نقاط الضعف الواضحة.", lim:"لا ينبغي الحكم على تعلم الفرد من اختبار واحد قصير فقط.",
+ info:["Starter (Basic) مجاني؛ Individual (Super) نحو 18 دولارًا شهريًا عند الدفع السنوي بحسب صفحة الأسعار الأمريكية، وقد تختلف الأسعار حسب المنطقة.","إنشاء وتقديم أنشطة أساسية؛ نحو 20 نشاطًا مخزنًا في خطة Basic وفق صفحة المساعدة.","يمكن إعداد محتوى عربي، مع فحص عرض المعادلات والأرقام.","حساب معلم؛ أجهزة أو رابط مشاركة للمستفيدين.","تقارير ونتائج ومشاركة بحسب نوع الحساب والخطة."],
+ links:["https://wayground.com/","https://help.wayground.com/support/solutions/articles/158000405091-wayground-ai-generate-assessments-from-prompts-documents-videos-more","https://wayground.com/super-pricing"]}
 };
 
-/* =========================================================
-   المحتوى: أربع وحدات تعلم (RLOs)
-   ========================================================= */
-const UNITS = [
- {k:1, code:'RLO1', title:'مفهوم إنترنت الأشياء', time:'7 دقائق',
-  lo:'أن يعرّف المتعلم إنترنت الأشياء، ويميّز مكونات نظامه الأربعة، ويرتّب مراحل عمله، ويصنّف الأجهزة إلى أجهزة إنترنت أشياء وأجهزة تقليدية.',
-  keys:['s13q0','s13q1','s13q2','s14'],
-  sum:['إنترنت الأشياء شبكة من الأجهزة المادية المتصلة بالإنترنت، تجمع البيانات وتتبادلها دون تدخل بشري مباشر.','مكونات النظام: الأجهزة والمستشعرات، شبكات الاتصال، معالجة البيانات، واجهة المستخدم.','يعمل النظام بالترتيب: جمع ← نقل ← تحليل ← إجراء تلقائي.']},
- {k:2, code:'RLO2', title:'تطبيقات إنترنت الأشياء', time:'6 دقائق',
-  lo:'أن يحدّد المتعلم تطبيقات إنترنت الأشياء في المنزل وبيئات التعلم والصحة، ويميّز التطبيق المباشر لإنترنت الأشياء من غيره.',
-  keys:['s24'],
-  sum:['المنزل الذكي: إضاءة وتكييف وأمان تُدار عن بُعد وترشّد الطاقة.','بيئات التعلم: فصل ذكي، وحضور آلي ببطاقات RFID، وإدارة للطاقة.','الصحة: ساعات صحية، ومراقبة عن بُعد، وتنبيهات طوارئ.']},
- {k:3, code:'RLO3', title:'تصميم أنظمة إنترنت الأشياء', time:'8 دقائق',
-  lo:'أن يطبّق المتعلم مراحل تصميم نظام إنترنت الأشياء ومعايير التصميم الجيد، فيختار المكونات المناسبة لمدرسة ذكية ويتخذ قراراً تصميمياً سليماً.',
-  keys:['s33','s340'],
-  sum:['مراحل التصميم: تحديد المشكلة، تحديد المتطلبات، اختيار الأجهزة والمستشعرات، اختبار الحل.','معايير التصميم الجيد: الأمان السيبراني، سهولة الاستخدام، قابلية التوسع، كفاءة الطاقة.','إدارة فترات الإرسال تحافظ على البطاريات دون إيقاف النظام.']},
- {k:4, code:'RLO4', title:'الأخلاقيات والأمن', time:'7 دقائق',
-  lo:'أن يتخذ المتعلم قرارات مسؤولة تحمي خصوصية البيانات وأمن الأجهزة المتصلة في مواقف واقعية.',
-  keys:['s440','s441'],
-  sum:['الخصوصية تُحمى بالموافقة المستنيرة وتشفير البيانات أثناء نقلها وتخزينها.','تغيير كلمات المرور الافتراضية وتحديث البرامج الثابتة يغلقان أشهر الثغرات.','تُستخدم البيانات فيما جُمعت من أجله فقط، ولا تُشارك دون تصريح.']}
+/* Unified case: every example follows one training unit for the target audience. Overrides sc/pr/out and adds ethics (eth) + alternative tool (alt). */
+const CASE = "يعمل مصمم تعليمي على إعداد وحدة تدريبية مدمجة بعنوان «تصميم الشاشات التعليمية وفق نظرية الحمل المعرفي» لطلبة الدراسات العليا وممارسي التصميم التعليمي في كلية التربية. تتابع أمثلة الدليل هذه الوحدة من التحليل حتى التقويم.";
+const EXTRA = {
+gemini:{step:1,
+ sc:"قبل تصميم الوحدة، يراجع المصمم وصف مقرر «تصميم الوسائط التعليمية» في برنامج الماجستير ومخرجات التعلم المعتمدة للبرنامج، ليحدد موقع موضوع الحمل المعرفي فيهما.",
+ pr:"اعتمد على وصف المقرر ومخرجات تعلم البرنامج المرفقة فقط. أنشئ جدولًا يبيّن: مخرج التعلم، والموضوعات التي تدعمه، ومدى تغطية مبادئ الحمل المعرفي وتصميم الشاشات، وأي فجوة ظاهرة. أورد شاهدًا من المصدر لكل ملاحظة، وميّز بين الفجوة المثبتة والسؤال الذي يحتاج إلى تحقق.",
+ out:"جدول اتساق أولي يحدد موقع الوحدة التدريبية من مخرجات البرنامج، ولا يُعد حكمًا نهائيًا على المقرر.",
+ eth:["لا ترفع وثائق داخلية غير منشورة أو بيانات طلبة إلا بإذن صريح من الجهة المالكة لها.","تحقق من كل إحالة قبل نقلها إلى تقرير التحليل، واذكر استخدام الأداة في منهجية العمل."],
+ alt:"Humata (البطاقة 02) عند العمل على ملف طويل واحد."},
+humata:{step:2,
+ sc:"تريد الكلية أن تلتزم الوحدة بدليل معايير جودة المقررات الإلكترونية المعتمد في الجامعة، وهو ملف طويل يصعب الرجوع إليه يدويًا.",
+ pr:"من دليل المعايير المرفق فقط: استخرج المعايير التي تنطبق على وحدة تدريبية إلكترونية قصيرة لطلبة الدراسات العليا، وتحديدًا ما يتعلق بوضوح الأهداف، وإرشادات المتعلم، وتصميم الوسائط، والتفاعل، والتقويم. ضع اسم المعيار ومتطلبه الأساسي وشاهدًا نصيًا قصيرًا أو رقم الصفحة. لا تضف معايير غير موجودة.",
+ out:"قائمة مراجعة جودة أولية للوحدة، مع إشارات إلى مواضع المعايير في الدليل.",
+ eth:["ارفع المستندات التي يحق لك استخدامها فقط، وراجع شروط مشاركة الأدلة المؤسسية قبل رفعها.","احذف البيانات الشخصية والمعلومات السرية من الملف قبل الرفع."],
+ alt:"Gemini Notebook (البطاقة 01) لجمع عدة مصادر في دفتر واحد."},
+better:{step:3,
+ sc:"وزّع المصمم استبانة على 30 من طلبة الدراسات العليا وممارسي التصميم التعليمي عن مدى صعوبة تطبيق مبادئ الحمل المعرفي في تصميم الشاشات، ويريد تحديد المبادئ التي تحتاج إلى تركيز أكبر في الوحدة.",
+ pr:"حلّل بيانات الاستبانة المرفقة بعد حذف أي بيانات تعرّف بالمشاركين. احسب عدد الاستجابات الصالحة ومتوسط درجة الصعوبة لكل مبدأ (تجنب تشتت الانتباه، والتخلص من العناصر الزائدة، والتجزئة، والإشارة)، ثم رتّب المبادئ من الأصعب إلى الأسهل. قارن بين الطلبة والممارسين إن وُجد عمود يميز بينهم. أنشئ رسم أعمدة، واذكر القيم المفقودة وطريقة الحساب.",
+ out:"جدول أولويات ومخطط يحددان المبادئ التي تحتاج إلى تركيز أكبر في الوحدة، مع ضرورة مراجعة التفسير.",
+ eth:["احذف ما يعرّف بالمشاركين (الأسماء والبريد والأرقام) قبل رفع الملف، والتزم بنظام حماية البيانات الشخصية.","استخدم البيانات في الغرض الذي وافق عليه المشاركون، واذكر طريقة التحليل والأداة في التقرير."],
+ alt:"ChatGPT (البطاقة 04) بميزة تحليل الملفات، أو Excel للتحليل اليدوي."},
+chatgpt:{step:4,
+ sc:"بناءً على نتائج التحليل، يصمم المصمم الوحدة التدريبية المدمجة من جلستين، مدة كل جلسة 90 دقيقة.",
+ pr:"أنت مساعد لمصمم تعليمي. الفئة المستهدفة طلبة دراسات عليا وممارسون للتصميم التعليمي. اقترح خطة أولية لوحدة تدريبية مدمجة من جلستين (90 دقيقة لكل جلسة) عن تصميم الشاشات التعليمية وفق نظرية الحمل المعرفي. صُغ ثلاثة أهداف قابلة للقياس في مستويي التطبيق والتقويم، واربط بكل هدف نشاطًا وأداة تقويم تقيسه مباشرة. اعرض ذلك في جدول، وأشر إلى أي افتراض يحتاج إلى تحقق.",
+ out:"جدول أولي للأهداف والأنشطة وطرق التقويم، يُراجع قبل دمجه في سيناريو الوحدة.",
+ eth:["لا تُدخل بيانات شخصية أو معلومات سرية في المحادثة.","تحقق من المعلومات والمراجع التي يقترحها، وأفصح عن الاستعانة به وفق سياسة الجامعة أو المقرر."],
+ alt:"Gemini أو Claude بالأمر نفسه."},
+magic:{step:5,
+ sc:"تجمع الجلسة الأولى مشاركين بخبرات متفاوتة: طلبة جدد في البرنامج، وممارسين لديهم سنوات من العمل. يريد المصمم خطة جلسة تراعي هذا التفاوت.",
+ pr:"أنشئ خطة جلسة تدريبية مدتها 90 دقيقة لطلبة دراسات عليا وممارسين في التصميم التعليمي، موضوعها تقليل الحمل المعرفي الدخيل في الشاشات التعليمية. الهدف: أن يحلل المشارك شاشة تعليمية ويقترح تعديلين يقللان الحمل الدخيل مع تبريرهما. أضف نشاطًا تطبيقيًا على شاشة حقيقية، ومسار دعم للمبتدئين، ومهمة متقدمة للممارسين، وسؤال خروج يقيس الهدف.",
+ out:"مسودة خطة جلسة متمايزة تتطلب مراجعة الزمن ومستوى العمق والمصطلحات العربية.",
+ eth:["لا تُدخل أسماء المتعلمين أو بيانات أدائهم الفردية.","راجع ملاءمة الأمثلة للسياق المحلي، وانتبه لأي تحيز في افتراضات المسودة."],
+ alt:"ChatGPT (البطاقة 04) مع ذكر عناصر الخطة في الأمر."},
+gamma:{step:6,
+ sc:"يحتاج المصمم إلى عرض مرافق للجلسة الأولى يشرح أنواع الحمل المعرفي الثلاثة بأمثلة من شاشات تعليمية.",
+ pr:"أنشئ مسودة عرض عربي من 8 بطاقات لطلبة الدراسات العليا في التصميم التعليمي عن أنواع الحمل المعرفي: الجوهري، والدخيل، ووثيق الصلة. ابدأ بأهداف الجلسة، ثم بطاقة تعريف بالنظرية، وبطاقة لكل نوع مع مثال من تصميم شاشة تعليمية، وبطاقتين لمبادئ تقليل الحمل الدخيل، وبطاقة خلاصة وسؤال للنقاش. استخدم نقاطًا قصيرة، ولا تختلق دراسات أو أرقامًا.",
+ out:"عرض أولي جاهز للتحرير العلمي واللغوي، تُراجع دقة مصطلحاته قبل مشاركته.",
+ eth:["تحقق من ترخيص الصور التي تضيفها الأداة تلقائيًا، واستبدل ما لا يُعرف مصدره.","وضّح أن العرض أُعد بمساعدة الذكاء الاصطناعي عند مشاركته أكاديميًا."],
+ alt:"Canva (التصميم بالذكاء الاصطناعي) لإنتاج عرض من قوالب جاهزة."},
+leonardo:{step:7,
+ sc:"يريد المصمم صورة لشاشتين متقابلتين: الأولى مزدحمة تشتت الانتباه، والثانية منظمة، لاستخدامها في نشاط المقارنة. ويريدها بلا نصوص لأن أدوات التوليد تخطئ في الكتابة.",
+ pr:"Side-by-side illustration of two e-learning screens on laptops. Left screen: cluttered layout with many competing images, decorative icons, scattered blocks and clashing bright colors. Right screen: the same lesson with one clear diagram, generous white space, a simple grid and calm colors. No readable text, no letters, no logos, flat vector style, 16:9.",
+ out:"صورة مقارنة يضيف إليها المصمم العناوين العربية خارج أداة التوليد، ثم يستخدمها في نشاط تحليل الشاشات.",
+ eth:["لا تطلب صورًا تحاكي أسلوب فنان بعينه أو وجوه أشخاص حقيقيين.","أشر إلى أن الصورة مولّدة بالذكاء الاصطناعي، وتذكّر أن صور الخطة المجانية قد تكون متاحة للآخرين."],
+ alt:"Adobe Firefly لتوليد الصور."},
+fliki:{step:8,
+ sc:"يريد المصمم فيديو مدته دقيقة يشاهده المشاركون قبل الجلسة الأولى، ويشرح أثر تشتت الانتباه (Split-attention).",
+ pr:"أنشئ فيديو تعليميًا عربيًا مدته دقيقة واحدة لطلبة الدراسات العليا في التصميم التعليمي، من ثلاثة مشاهد: (1) شاشة تفصل الرسم عن شرحه فيضطر المتعلم إلى التنقل بينهما، (2) تفسير مختصر لسبب زيادة الحمل المعرفي الدخيل، (3) الحل بوضع الشرح بجوار أجزاء الرسم. اختم بسؤال للتفكير قبل الجلسة: أين رأيت هذا الخطأ في مقرر سابق؟",
+ out:"فيديو أولي للمراجعة قد يحتاج تعديل المشاهد المقترحة آليًا ونطق المصطلحات.",
+ eth:["تحقق من تراخيص المقاطع والصور الجاهزة قبل النشر خارج القاعة الدراسية.","أفصح للمشاهد أن التعليق الصوتي اصطناعي."],
+ alt:"محرر الفيديو في Canva مع تعليق صوتي مسجل أو مولّد من ElevenLabs (البطاقة 09)."},
+eleven:{step:9,
+ sc:"يريد المصمم تعليقًا صوتيًا مدته نصف دقيقة يرحب بالمشاركين في الجزء الإلكتروني من الوحدة ويشرح طريقة السير فيها.",
+ pr:"مرحبًا بك في وحدة «تصميم الشاشات التعليمية وفق نظرية الحمل المعرفي». ابدأ بقراءة أهداف الوحدة، ثم شاهد الفيديو التمهيدي قبل الجلسة الأولى. بعد كل جلسة، طبّق المبادئ على شاشة من عملك أو من مقرر سابق، وارفعها في مساحة النقاش لتتلقى ملاحظات زملائك. إذا واجهتك مشكلة تقنية، استخدم صفحة المساعدة أو تواصل مع الميسر.",
+ out:"ملف صوتي عربي متزن يرافق صفحة البداية في الوحدة بعد التدقيق السمعي.",
+ eth:["لا تستنسخ صوت أي شخص دون موافقة مكتوبة منه، ومن ذلك أصوات الزملاء والمحاضرين.","أفصح أن الصوت اصطناعي، وأرفق نص التعليق مكتوبًا لدعم إمكانية الوصول."],
+ alt:"الأصوات المدمجة في Fliki (البطاقة 08)، أو تسجيل صوتي بشري."},
+curipod:{step:10,
+ sc:"أثناء الجلسة الأولى، يعرض الميسر صورة الشاشتين ويريد معرفة تحليل المشاركين قبل أن يشرح.",
+ pr:"أنشئ نشاطًا تفاعليًا قصيرًا بعنوان «أي الشاشتين أخف على الذاكرة؟». ابدأ بسؤال استطلاع يختار فيه المشارك الشاشة الأقل حملًا دخيلًا، ثم سؤال إجابة قصيرة يطلب مبدأً واحدًا يبرر الاختيار، ثم سؤال يطلب تعديلًا واحدًا على الشاشة المزدحمة. اجعل الصياغة مناسبة لطلبة الدراسات العليا، وخصص وقتًا للنقاش.",
+ out:"ثلاث شاشات مشاركة تبيّن للميسر ما فهمه المشاركون وما يحتاج إلى توضيح قبل الشرح.",
+ eth:["أخبر المشاركين بكيفية استخدام إجاباتهم، واجعل المشاركة دون أسماء عند جمع آراء حساسة.","لا تحتفظ بالاستجابات بعد انتهاء الغرض منها."],
+ alt:"Mentimeter أو Nearpod لأنشطة المشاركة المباشرة."},
+questionwell:{step:11,
+ sc:"بعد الجلستين، يريد المصمم بنك أسئلة تقويم بنائي يقيس قدرة المشاركين على تطبيق مبادئ الحمل المعرفي، لا مجرد تعريفها.",
+ eth:["لا ترفع كتبًا أو مواد محمية بحقوق النشر كاملة؛ استخدم مقتطفات أو ملخصات مسموحًا بها.","لا تعتمد الأسئلة المولدة في اختبار رسمي قبل التحقق من صدقها ومراجعتها تخصصيًا."],
+ alt:"Wayground (البطاقة 12) بميزة التوليد بالذكاء الاصطناعي."},
+wayground:{step:12,
+ sc:"ينقل المصمم الأسئلة المعتمدة إلى اختبار قصير يطبقه في نهاية الوحدة، ويريد معرفة ما إذا كانت الأخطاء تتركز في التمييز بين أنواع الحمل أم في اختيار الحل التصميمي المناسب.",
+ pr:"أنشئ اختبارًا قصيرًا من ستة أسئلة لطلبة الدراسات العليا في التصميم التعليمي عن نظرية الحمل المعرفي: سؤالان يميزان بين الحمل الجوهري والدخيل في موقف تصميمي، وثلاثة أسئلة تطلب اختيار التعديل الأنسب لشاشة موصوفة، وسؤال عن الحالات التي يكون فيها الحمل وثيق الصلة مفيدًا. قدّم أربعة بدائل لكل سؤال وإجابة صحيحة مع تفسير مختصر، ثم اعرضها للمراجعة.",
+ out:"اختبار أولي وتقرير إجابات بعد التطبيق يوجهان التغذية الراجعة وتحسين الوحدة.",
+ eth:["احمِ نتائج المشاركين الفردية ولا تعرضها أمام الآخرين.","لا تبنِ قرارًا مؤثرًا على المتعلم على نتيجة اختبار قصير واحد."],
+ alt:"Kahoot! أو اختبارات Microsoft Forms."}
+};
+Object.keys(EXTRA).forEach(k => Object.assign(T[k], EXTRA[k]));
+T.chatgpt.steps[1] = "ابدأ محادثة جديدة وحدد الفئة المستهدفة والموضوع والزمن والمخرج المطلوب.";
+T.magic.steps[2] = "أدخل الموضوع والمستوى (اختر الجامعي أو تعليم الكبار إن توفر) والزمن والهدف في الحقول المتاحة.";
+
+const ETHICS = [
+ ["الشفافية والإفصاح","أفصح عن استخدام أدوات الذكاء الاصطناعي في إعداد المحتوى أو التحليل، ووضّح للمتعلم أن الصورة أو الصوت أو النص مولّد آليًا."],
+ ["الخصوصية وحماية البيانات","لا تُدخل بيانات شخصية للمتعلمين أو المشاركين في أي أداة، واحذف ما يعرّف بهم قبل الرفع، والتزم بنظام حماية البيانات الشخصية في المملكة."],
+ ["الملكية الفكرية","ارفع المواد التي يحق لك استخدامها فقط، وتحقق من تراخيص الصور والمقاطع المولدة أو المضافة تلقائيًا، ولا تحاكِ أسلوب فنان أو صوت شخص دون إذن."],
+ ["الدقة والتحقق","تعامل مع كل مخرج على أنه مسودة. تحقق من المعلومات والمراجع والأرقام، فقد تنتج الأدوات معلومات تبدو صحيحة وهي غير ذلك."],
+ ["العدالة والتحيز","راجع المحتوى المولد بحثًا عن صور نمطية أو افتراضات لا تناسب السياق الثقافي والمحلي للمتعلمين."],
+ ["المسؤولية البشرية","يبقى قرار التصميم والتقويم مسؤولية المصمم التعليمي. لا تُبنى قرارات مؤثرة على المتعلم على مخرجات الأداة وحدها."],
+ ["النزاهة الأكاديمية","التزم بسياسة الجامعة والمقرر في استخدام الذكاء الاصطناعي، ولا تقدّم عملًا مولدًا على أنه جهدك الشخصي دون إفصاح."]
+];
+const CHECK = ["هل أزلت أي بيانات شخصية من المدخلات؟","هل يحق لي استخدام الملفات التي سأرفعها؟","هل سأراجع المخرج علميًا قبل استخدامه؟","هل سأفصح عن استخدام الأداة لمن يتلقى العمل؟","هل يتوافق الاستخدام مع سياسة الجامعة أو الجهة؟"];
+
+const GLOSSARY = [
+ ["ADDIE","ADDIE","نموذج للتصميم التعليمي من خمس مراحل: التحليل، والتصميم، والتطوير، والتنفيذ، والتقويم."],
+ ["الذكاء الاصطناعي التوليدي","Generative AI","أنظمة تنتج محتوى جديدًا من نص أو صورة أو صوت أو فيديو بناءً على تعليمات المستخدم."],
+ ["النموذج اللغوي الكبير","Large Language Model (LLM)","نموذج مدرّب على كميات كبيرة من النصوص، يفهم اللغة ويولّدها، وتقوم عليه أدوات مثل ChatGPT."],
+ ["الأمر أو المُوجِّه","Prompt","التعليمات التي يكتبها المستخدم للأداة لتحديد المهمة والسياق وشكل المخرج."],
+ ["هندسة الأوامر","Prompt Engineering","صياغة الأوامر بطريقة منظمة (الدور، والسياق، والمهمة، والقيود، وشكل المخرج) للحصول على نتائج أدق."],
+ ["الهلوسة","Hallucination","إنتاج الأداة معلومات أو مراجع تبدو صحيحة وهي غير موجودة أو خاطئة."],
+ ["الإحالة","Citation","إشارة في المخرج إلى الموضع الذي استندت إليه الأداة في المصدر، تساعد على التحقق."],
+ ["التعرف الضوئي على الحروف","OCR","تقنية تحوّل النص الموجود في صورة أو ملف ممسوح ضوئيًا إلى نص قابل للقراءة والبحث."],
+ ["تحويل النص إلى كلام","Text to Speech (TTS)","توليد صوت منطوق من نص مكتوب باستخدام أصوات اصطناعية."],
+ ["الرصيد","Credits","وحدات استهلاك تحددها الخطة، وتُخصم مع كل عملية توليد."],
+ ["الاتساق البنائي","Constructive Alignment","توافق الأهداف التعليمية مع أنشطة التعلم وأدوات التقويم."],
+ ["التعليم المتمايز","Differentiated Instruction","تكييف الأنشطة والدعم بحسب اختلاف مستويات المتعلمين وخبراتهم."],
+ ["التقويم البنائي","Formative Assessment","تقويم أثناء التعلم هدفه تقديم تغذية راجعة وتحسين التعلم لا إصدار حكم نهائي."],
+ ["الحمل المعرفي","Cognitive Load","مقدار الجهد الذي تبذله الذاكرة العاملة أثناء التعلم، ويُقسم إلى جوهري ودخيل ووثيق الصلة."],
+ ["العلامة المائية","Watermark","شعار أو نص تضيفه الأداة على المخرج في الخطط المجانية غالبًا."]
 ];
 
-const S = [
- {id:'cover', kind:'cover', nav:'الغلاف'},
- {id:'guide', kind:'guide', nav:'التعليمات'},
- {id:'menu',  kind:'menu',  nav:'القائمة الرئيسة'},
-
- /* ---------- RLO1 ---------- */
- {id:'s11', u:1, kind:'keywords', nav:'S1.1 ما إنترنت الأشياء؟', title:'ما إنترنت الأشياء؟', type:'كشف الكلمات المفتاحية',
-  parts:['إنترنت الأشياء (IoT) شبكة من ',{k:'الأجهزة والأدوات المادية'},' ',{k:'المتصلة بالإنترنت'},'، ',{k:'تجمع البيانات وتتبادلها'},' ',{k:'دون تدخل بشري مباشر'},'.'],
-  btn:'استكشف التعريف', fb:'أحسنت! إنترنت الأشياء هو الجسر الذي يربط العالم الفيزيائي بالعالم الرقمي.'},
-
- {id:'s12', u:1, kind:'cardsModal', nav:'S1.2 مكونات النظام', title:'مكونات نظام إنترنت الأشياء', type:'بطاقات تفاعلية + صورة تفاعلية',
-  lead:'يتكون أي نظام لإنترنت الأشياء من أربعة مكونات أساسية.', hint:'اضغط على كل بطاقة لمعرفة المزيد',
-  img:()=>IMG.pipe([{ic:'🌡️',t:'الأجهزة والمستشعرات'},{ic:'📶',t:'شبكات الاتصال'},{ic:'☁️',t:'معالجة البيانات'},{ic:'📱',t:'واجهة المستخدم'}]),
-  items:[
-   {ic:'🌡️',t:'الأجهزة والمستشعرات',d:'تقيس ما حولها، مثل الحرارة والحركة، وتحوله إلى بيانات.',ex:'مستشعر نبض القلب في الساعة الذكية.'},
-   {ic:'📶',t:'شبكات الاتصال',d:'تنقل البيانات من الجهاز إلى مكان معالجتها.',ex:'شبكة Wi-Fi أو البلوتوث.'},
-   {ic:'☁️',t:'معالجة البيانات',d:'تحلل البيانات وتستخرج منها القرار.',ex:'منصة سحابية تقارن القراءة بالحد المسموح.'},
-   {ic:'📱',t:'واجهة المستخدم',d:'تعرض النتائج وتتيح التحكم.',ex:'تطبيق على الجوال.'}],
-  fb:'رائع! استكشفت جميع مكونات النظام.'},
-
- {id:'s13', u:1, kind:'stepper', nav:'S1.3 كيف يعمل؟', title:'كيف يعمل إنترنت الأشياء؟', type:'إنفوجرافيك متدرج بأسئلة توقف',
-  lead:'تابع مراحل عمل النظام. يتوقف الإنفوجرافيك بعد كل مرحلة لتجيب عن سؤال قبل المتابعة.',
-  stages:[{ic:'🌡️',t:'جمع البيانات بالمستشعرات',d:'يرصد المستشعر ارتفاع الحرارة في الغرفة.'},
-          {ic:'📡',t:'نقل البيانات عبر الشبكة',d:'يرسل المستشعر القراءة عبر الشبكة.'},
-          {ic:'☁️',t:'تحليل البيانات في السحابة',d:'تقارن المنصة السحابية القراءة بالحد المسموح.'},
-          {ic:'❄️',t:'اتخاذ الإجراء التلقائي',d:'يصدر النظام أمراً بتشغيل التكييف.'}],
-  qs:[{q:'ما الخطوة التالية للبيانات؟',o:['نقلها عبر الشبكة','تشغيل التكييف مباشرة'],a:0},
-      {q:'أين تُحلَّل البيانات؟',o:['في المستشعر','في السحابة'],a:1},
-      {q:'ماذا يحدث بعد التحليل؟',o:['يتخذ النظام الإجراء تلقائياً','تُحذف البيانات'],a:0}],
-  ok:'صحيح! انتقل إلى المرحلة التالية.',
-  no:'ليس بعد. تذكّر أن البيانات تُجمع، ثم تُنقل، ثم تُحلَّل، ثم يُتخذ الإجراء.',
-  fb:'ممتاز! البيانات هي شريان الحياة في اتخاذ القرارات الذكية.'},
-
- {id:'s14', u:1, kind:'classify', nav:'S1.4 نشاط: صنّف الأجهزة', title:'نشاط: صنّف الأجهزة', type:'سحب وإفلات (تصنيف) · تقويم',
-  hint:'اسحب كل عنصر إلى المجموعة المناسبة (أو اضغط على العنصر ثم على المجموعة)',
-  bins:['أجهزة إنترنت الأشياء','أجهزة تقليدية'],
-  items:[{t:'⌚ ساعة ذكية',b:0},{t:'💡 مصباح عادي',b:1},{t:'🧊 ثلاجة ذكية',b:0},{t:'📖 كتاب ورقي',b:1}],
-  ok:'إجابة ممتازة! الساعة والثلاجة الذكية تحتويان على مستشعرات واتصال بالشبكة، بعكس المصباح والكتاب الورقي.',
-  no:'حاول مرة أخرى! الأجهزة الذكية تتميز بوجود مستشعرات وإمكانية تبادل البيانات عبر الإنترنت.'},
- {id:'end1', u:1, kind:'unitEnd', nav:'ختام الوحدة الأولى'},
-
- /* ---------- RLO2 ---------- */
- {id:'s21', u:2, kind:'hotspot', nav:'S2.1 المنازل الذكية', title:'إنترنت الأشياء في المنازل الذكية', type:'صورة تفاعلية (نقاط ساخنة)',
-  lead:'تربط المنازل الذكية الأجهزة بالإنترنت للتحكم بها ومتابعتها عن بُعد.', hint:'اضغط على الغرف لاكتشاف التقنية المستخدمة',
-  img:()=>IMG.house, cap:'مخطط منزل ذكي (رسم توضيحي أصلي)',
-  spots:[{x:27,y:30,cls:'on-living',t:'💡 الإضاءة الذكية',d:'تعمل الإضاءة حسب الحاجة وتنطفئ في الغرف الفارغة.'},
-         {x:62,y:22,cls:'on-bed',t:'❄️ التحكم بالتكييف',d:'يضبط درجة الحرارة تلقائياً ويرشّد الطاقة.'},
-         {x:88,y:62,cls:'on-door',t:'🚨 الأمان والإنذار',d:'يرسل تنبيهاً إلى الجوال عند اكتشاف خطر.'}],
-  fb:'رائع! تعمل هذه التطبيقات على ترشيد الطاقة وزيادة الأمان.'},
-
- {id:'s22', u:2, kind:'hover', nav:'S2.2 بيئات التعلم', title:'إنترنت الأشياء في بيئات التعلم', type:'صورة تفاعلية (تمرير المؤشر)',
-  lead:'تسهم الأجهزة المتصلة في رفع كفاءة البيئة الصفية وتقليل العمل الإداري.', hint:'مرّر المؤشر على التجهيزات داخل الفصل (أو اضغط عليها)',
-  img:()=>IMG.classroom, cap:'فصل ذكي (رسم توضيحي أصلي)',
-  spots:[{x:32,y:40,cls:'cls-board',t:'الفصل الذكي',d:'سبورة تفاعلية وإضاءة وتكييف تعمل حسب حالة القاعة.'},
-         {x:70,y:63,cls:'cls-door',t:'الحضور الآلي',d:'تسجيل حضور الطلاب ببطاقات RFID عند دخول القاعة.'},
-         {x:60,y:11,cls:'cls-power',t:'إدارة الطاقة',d:'إطفاء الأجهزة في القاعات غير المستخدمة.'}],
-  fb:'أحسنت! ترفع هذه التقنيات كفاءة البيئة الصفية وتختصر وقت العمل الإداري.'},
-
- {id:'s23', u:2, kind:'flip', nav:'S2.3 الصحة', title:'إنترنت الأشياء في الصحة', type:'بطاقات قلّابة + صورة تفاعلية',
-  lead:'تتيح الأجهزة المتصلة متابعة المؤشرات الصحية وإرسال البيانات إلى المختصين عن بُعد.', hint:'اضغط على البطاقات لمعرفة المزيد',
-  img:()=>IMG.watch, cap:'ساعة صحية متصلة بالفريق الصحي (رسم توضيحي أصلي)',
-  items:[{ic:'⌚',t:'الساعات الصحية',d:'تتبع النشاط وبعض المؤشرات الحيوية.',cls:'w-watch'},
-         {ic:'📡',t:'المراقبة عن بُعد',d:'إرسال قراءات الأجهزة إلى الفريق الصحي.',cls:'w-remote'},
-         {ic:'🚑',t:'تنبيهات الطوارئ',d:'التنبيه عند رصد قراءات تستدعي المتابعة.',cls:'w-alert'}],
-  fb:'صحيح! يسهم إنترنت الأشياء في متابعة الحالات الصحية بسرعة ودقة.'},
-
- {id:'s24', u:2, kind:'quiz', nav:'S2.4 اختبار قصير', title:'اختبار قصير', type:'اختيار من متعدد · تقويم', btn:'تحقق من الإجابة',
-  qs:[{s:'سؤال', q:'أي مما يلي يُعد تطبيقاً مباشراً لإنترنت الأشياء؟',
-    wrong:'إجابة غير دقيقة! تطبيق إنترنت الأشياء يحتاج جهازاً فيه مستشعرات ويتصل بالشبكة.',
-    o:[{t:'كتاب ورقي'},{t:'ساعة ذكية متصلة بالتطبيق والشبكة',ok:1,f:'إجابة صحيحة! الساعة الذكية تجمع البيانات الحيوية وترسلها إلى تطبيق سحابي.'},{t:'سبورة خشبية تقليدية'},{t:'قلم رصاص'}]}]},
- {id:'end2', u:2, kind:'unitEnd', nav:'ختام الوحدة الثانية'},
-
- /* ---------- RLO3 ---------- */
- {id:'s31', u:3, kind:'reveal', nav:'S3.1 مراحل تصميم النظام', title:'مراحل تصميم النظام', type:'خط عملية تفاعلي',
-  lead:'يمر تصميم أي نظام لإنترنت الأشياء بأربع مراحل.', hint:'اضغط على كل مرحلة لإظهار مهامها', numbered:true, steps:true,
-  items:[{ic:'🎯',t:'تحديد المشكلة',q:'ما الذي نريد حله؟',m:'<b>في مثال المدرسة:</b> قاعات المدرسة حارة.'},
-         {ic:'📋',t:'تحديد المتطلبات',q:'ماذا نقيس؟ ومن يستلم البيانات؟',m:'<b>في مثال المدرسة:</b> نقيس الحرارة وجودة الهواء.'},
-         {ic:'🔧',t:'اختيار الأجهزة والمستشعرات',q:'المكونات المناسبة للمشكلة.',m:'<b>في مثال المدرسة:</b> مستشعرات وبوابة وتطبيق.'},
-         {ic:'🧪',t:'اختبار الحل وتجربته',q:'تجربة النظام قبل تعميمه.',m:'<b>في مثال المدرسة:</b> تجربة في قاعة واحدة قبل التعميم.'}],
-  fb:'أحسنت! اطلعت على المراحل الأربع: مشكلة ← متطلبات ← أجهزة ← اختبار.'},
-
- {id:'s32', u:3, kind:'reveal', nav:'S3.2 معايير التصميم الجيد', title:'معايير التصميم الجيد', type:'بطاقات تفاعلية',
-  lead:'استكشف معايير النظام الناجح.', hint:'اضغط على كل معيار لمعرفة التوصية التصميمية',
-  items:[{ic:'🔒',t:'الأمان السيبراني',q:'حماية الأجهزة والبيانات.',m:'<b>التوصية:</b> غيّر كلمات المرور الافتراضية، وحدّث البرامج الثابتة، وشفّر البيانات.'},
-         {ic:'🖐️',t:'سهولة الاستخدام',q:'واجهة واضحة وتحكم بسيط.',m:'<b>التوصية:</b> اعرض القراءات في واجهة واضحة، واجعل التحكم بخطوات قليلة.'},
-         {ic:'📈',t:'قابلية التوسع',q:'إضافة أجهزة جديدة عند الحاجة.',m:'<b>التوصية:</b> اختر بوابة ومنصة تسمحان بإضافة مستشعرات جديدة دون إعادة بناء النظام.'},
-         {ic:'🔋',t:'كفاءة استهلاك الطاقة',q:'تقليل استهلاك البطاريات.',m:'<b>التوصية:</b> اضبط الإرسال عند تغيّر القراءات أو في فترات محددة.'}],
-  fb:'ممتاز! مراعاة الكفاءة والأمان تضمن استدامة النظام.'},
-
- {id:'s33', u:3, kind:'build', nav:'S3.3 نشاط: صمّم المدرسة الذكية', title:'صمّم نظام المدرسة الذكية', type:'سحب وإفلات (بناء نظام) · تقويم',
-  lead:'مدرسة ترغب في مراقبة جودة الهواء والحرارة في القاعات الدراسية.', hint:'اسحب المكونات المناسبة إلى لوحة النظام (أو اضغط عليها لنقلها)',
-  parts:[{t:'🌡️ مستشعر هواء وحرارة',ok:1},{t:'💡 مصباح عادي',ok:0},{t:'📡 بوابة اتصال (Gateway)',ok:1},{t:'📖 كتاب ورقي',ok:0},{t:'📱 تطبيق جوال',ok:1}],
-  done:()=>IMG.pipe([{ic:'🌡️',t:'مستشعر هواء وحرارة',s:'يقيس في القاعة'},{ic:'📡',t:'بوابة اتصال',s:'تنقل القراءات'},{ic:'📱',t:'تطبيق جوال',s:'يعرض النتائج'}]),
-  ok:'تركيب موثوق! اخترت المكونات المتناسبة مع احتياج المدرسة.',
-  no:'راجع اختيارك. المصباح العادي والكتاب الورقي لا يقيسان ولا يتصلان بالشبكة.'},
-
- {id:'s34', u:3, kind:'quiz', nav:'S3.4 اتخذ القرار المناسب', title:'اتخذ القرار المناسب', type:'سيناريو اتخاذ قرار · تقويم', btn:'تأكيد القرار',
-  qs:[{s:'الموقف', q:'لاحظت أن بطاريات مستشعرات المدرسة تفرغ خلال أيام قليلة. ما القرار الأنسب؟',
-    o:[{t:'إلغاء إرسال البيانات نهائياً.',f:'هذا القرار يوقف النظام عن عمله. المطلوب تقليل الإرسال لا إلغاؤه.'},
-       {t:'ضبط الإرسال عند تغير القراءات أو في فترات محددة.',ok:1,f:'قرار تصميمي ممتاز! إدارة فترات الإرسال تحافظ على الطاقة وتضمن الاستدامة.'},
-       {t:'تبديل البطاريات يومياً.',f:'حل مكلف وغير مستدام. المشكلة في برمجة الإرسال لا في البطاريات.'}]}]},
- {id:'end3', u:3, kind:'unitEnd', nav:'ختام الوحدة الثالثة'},
-
- /* ---------- RLO4 ---------- */
- {id:'s41', u:4, kind:'reveal', nav:'S4.1 الخصوصية وسرية البيانات', title:'حماية الخصوصية وسرية البيانات', type:'بطاقات تفاعلية + صورة تفاعلية',
-  lead:'تجمع الأجهزة المتصلة بيانات شخصية، مما يستلزم حمايتها واحترام خصوصية المستخدم.', hint:'استكشف ممارسات حماية الخصوصية',
-  img:()=>IMG.phone, cap:'طلب موافقة وتشفير البيانات (رسم توضيحي أصلي)',
-  items:[{ic:'✍️',t:'الموافقة المستنيرة',q:'هل يعرف المستخدم ما يُجمع عنه؟',m:'توضيح البيانات التي ستُجمع والغرض من استخدامها، والحصول على موافقة المستخدم.',cls:'p-consent'},
-         {ic:'🔐',t:'تشفير البيانات',q:'كيف تبقى البيانات سرية؟',m:'حماية البيانات أثناء نقلها وتخزينها.',cls:'p-enc'}],
-  fb:'الخصوصية حق أصيل للمستخدم لا يمكن التنازل عنه.'},
-
- {id:'s42', u:4, kind:'hotspot', nav:'S4.2 الأمن السيبراني', title:'الأمن السيبراني في إنترنت الأشياء', type:'صورة تفاعلية (اكتشف الثغرة وأغلقها)',
-  lead:'قد تتعرض الأجهزة المتصلة للاختراق، وتساعد إجراءات الحماية في تقليل المخاطر.', hint:'اضغط على نقطة الضعف لمعرفة الحماية المناسبة',
-  img:()=>IMG.camera, cap:'كاميرا مراقبة ذكية (رسم توضيحي أصلي)', keep:true,
-  spots:[{x:57,y:55,cls:'fixed-pw',t:'نقطة ضعف: كلمة مرور افتراضية',d:'<b>الحماية المناسبة:</b> تغيير كلمات المرور الافتراضية.'},
-         {x:73,y:82,cls:'fixed-fw',t:'نقطة ضعف: برنامج قديم غير محدّث',d:'<b>الحماية المناسبة:</b> تحديث البرامج الثابتة دورياً.'}],
-  fb:'أحسنت! التأمين المستمر يغلق الثغرات أمام المخاطر السيبرانية.'},
-
- {id:'s43', u:4, kind:'reveal', nav:'S4.3 المسؤولية والاستخدام الرشيد', title:'المسؤولية والاستخدام الرشيد', type:'بطاقات تفاعلية',
-  lead:'استخدم البيانات المجمعة للأغراض المحددة، مع احترام حقوق الأفراد والالتزام بالقوانين.', hint:'استكشف مبادئ المسؤولية الرقمية',
-  items:[{ic:'🤝',t:'احترام الحقوق',q:'المبدأ الأول',m:'حماية خصوصية الأفراد وبياناتهم.'},
-         {ic:'🎯',t:'الالتزام بالغرض',q:'المبدأ الثاني',m:'استخدام البيانات فيما جُمعت من أجله فقط.'},
-         {ic:'🛡️',t:'الاستخدام المسؤول',q:'المبدأ الثالث',m:'تجنب مشاركة البيانات دون تصريح.'}],
-  fb:'أحسنت! هذه المبادئ الثلاثة أساس المسؤولية الرقمية.'},
-
- {id:'s44', u:4, kind:'quiz', nav:'S4.4 تقويم: ماذا تفعل؟', title:'تقويم: ماذا تفعل في هذا الموقف؟', type:'سيناريو متفرع · تقويم', btn:'تأكيد الإجابة', seq:true,
-  qs:[{s:'الموقف 1', q:'طلب تطبيق ساعة ذكية مشاركة بياناتك الصحية مع جهة إعلانية مقابل مزايا إضافية. ما القرار الأنسب؟',
-       wrong:'راجع ما يجمعه التطبيق من بيانات ولمن يرسلها، ثم أعد المحاولة.',
-       o:[{t:'الموافقة فوراً.'},{t:'رفض المشاركة ومراجعة أذونات التطبيق.',ok:1,f:'قرار صحيح! مشاركة البيانات الصحية مع جهة إعلانية انتهاك للخصوصية، ومراجعة الأذونات تحمي بياناتك.'},{t:'تجاهل الطلب دون تغيير الإعدادات.'}]},
-      {s:'الموقف 2', q:'ركّبت المدرسة كاميرات مراقبة ذكية ما زالت تعمل بكلمة المرور الافتراضية. ما الإجراء الأول؟',
-       wrong:'فكّر في الثغرة التي يمكن أن يستغلها المخترق أولاً، ثم أعد المحاولة.',
-       o:[{t:'تشغيلها كما هي.'},{t:'تغيير كلمة المرور وتحديث البرامج الثابتة قبل ربطها بالشبكة.',ok:1,f:'قرار صحيح! كلمات المرور الافتراضية والبرامج غير المحدّثة من أكثر الثغرات استغلالاً.'},{t:'فصلها عن الإنترنت نهائياً.'}]}]},
- {id:'end4', u:4, kind:'unitEnd', nav:'ختام الوحدة الرابعة'},
-
- {id:'final', kind:'final', nav:'الخلاصة ونتيجتك'},
- {id:'refs',  kind:'refs',  nav:'المراجع'}
+const REFS = [
+ ["Branch, R. M. (2009). <i>Instructional design: The ADDIE approach</i>. Springer.",""],
+ ["Biggs, J., & Tang, C. (2011). <i>Teaching for quality learning at university</i> (4th ed.). Open University Press.",""],
+ ["Mayer, R. E. (2021). <i>Multimedia learning</i> (3rd ed.). Cambridge University Press.",""],
+ ["Sweller, J., van Merriënboer, J. J. G., & Paas, F. (2019). Cognitive architecture and instructional design: 20 years later. <i>Educational Psychology Review, 31</i>, 261–292.",""],
+ ["UNESCO. (2023). <i>Guidance for generative AI in education and research</i> (F. Miao & W. Holmes). UNESCO.","https://doi.org/10.54675/EWZM9535"],
+ ["الهيئة السعودية للبيانات والذكاء الاصطناعي (سدايا). (2023). <i>مبادئ أخلاقيات الذكاء الاصطناعي</i>.","https://sdaia.gov.sa/"],
+ ["الصفحات الرسمية للأدوات الاثنتي عشرة (الدخول، والشرح، والخطط والأسعار)، كما تظهر في بطاقة كل أداة. تاريخ الاطلاع: 14 نوفمبر 2026.",""]
 ];
 
-/* =========================================================
-   الحالة (تُحفظ في المتصفح إن أمكن)
-   ========================================================= */
-const KEY='iot-rlo-progress-v1';
-let ST={done:[],first:{}};
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.done) ST=s;}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
-const isDone=id=>ST.done.includes(id);
-function finish(id){ if(!isDone(id)){ST.done.push(id); save();} paintNav(); }
-function attempt(key,ok){ if(!(key in ST.first)){ST.first[key]=ok; save();} }
-const lessons=S.filter(s=>s.u&&s.kind!=='unitEnd');
-const unitLessons=k=>lessons.filter(s=>s.u===k);
 
-let cur=0;
-const $=(q,r=document)=>r.querySelector(q);
-const el=(t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
-const L=['أ','ب','ج','د'];
+const ICON = {
+  A:'<circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5l-4.8-4.8M8.5 13.5v-2M11 13.5V9M13.5 13.5v-3"/>',
+  D1:'<path d="M4 20l3.5-1 10-10-2.5-2.5-10 10z"/><path d="M14 6.5l2.5-2.5 3.5 3.5-2.5 2.5"/><path d="M3 4h7M3 4v7"/>',
+  D2:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M10.5 7.8l4.5 2.2-4.5 2.2z"/><path d="M8 20h8M12 16v4"/>',
+  I:'<circle cx="8" cy="8.5" r="2.8"/><circle cx="16.5" cy="8.5" r="2.8"/><path d="M3 19c0-3 2.3-5 5-5s5 2 5 5M11.5 19c0-3 2.3-5 5-5s5 2 5 5"/>',
+  E:'<path d="M10 6h10M10 12h10M10 18h10"/><path d="M3.5 6l1.5 1.5L8 4.5M3.5 12l1.5 1.5L8 10.5M3.5 18l1.5 1.5L8 16.5"/>'
+};
+const svg = (k, cls="") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+const MONO = {gemini:"GN",humata:"Hu",better:"BA",chatgpt:"GPT",magic:"MS",gamma:"Ga",leonardo:"Le",fliki:"Fl",eleven:"11",curipod:"Cp",questionwell:"QW",wayground:"Wg"};
 
-/* =========================================================
-   التنقل
-   ========================================================= */
-function paintNav(){
-  const nav=$('#nav'); nav.innerHTML=''; let lastU=-1;
-  S.forEach((s,i)=>{
-    const u=s.u||0;
-    if(u!==lastU){ nav.append(el('h4','', u?`الوحدة ${['','الأولى','الثانية','الثالثة','الرابعة'][u]} (${UNITS[u-1].code}): ${UNITS[u-1].title}`: (i===0?'البداية':'الختام'))); lastU=u; }
-    const b=el('button',(i===cur?'on ':'')+(isDone(s.id)?'done':''),`<span class="dot">${isDone(s.id)?'✓':''}</span><span>${s.nav}</span>`);
-    if(i===cur) b.setAttribute('aria-current','page');
-    b.onclick=()=>go(i); nav.append(b);
-  });
-  const n=lessons.filter(s=>isDone(s.id)).length;
-  $('#barFill').style.width=(n/lessons.length*100)+'%';
-  $('#barLbl').textContent=`أنجزت ${n} من ${lessons.length} شاشة تعليمية`;
+const INFO_LABELS = ["الاشتراك والسعر","المجاني وحدوده","دعم العربية","متطلبات البدء","التنزيل والمشاركة"];
+const TABS = ["التعريف والاستخدامات","خطوات الاستخدام","المثال التطبيقي","المزايا والاشتراك","الاستخدام الأخلاقي والبديل"];
+const LAST = TABS.length - 1;
+const PAGES = ["ethics","glossary","references"];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const stageOf = id => STAGES.find(s => s.tools.includes(id));
+const cnt = n => n > 2 ? `${n} أدوات` : n === 2 ? "أداتان" : "أداة واحدة";
+
+const rail = document.getElementById("rail"), view = document.getElementById("view"), hint = document.getElementById("hint");
+document.getElementById("case-text").textContent = CASE;
+let state = {stage:null, tool:null, tab:0};
+
+rail.innerHTML = STAGES.map(s => `
+  <button class="letter s-${s.k}" data-stage="${s.id}" aria-pressed="false" aria-label="${s.ar} ${s.en}">
+    ${svg(s.k)}<span class="ch">${s.ch}</span><span class="ar">${s.ar}</span><span class="en">${s.en}</span>
+  </button>`).join("");
+rail.addEventListener("click", e => { const b = e.target.closest(".letter"); if (b) go(b.dataset.stage); });
+document.querySelector(".extras").addEventListener("click", e => { const b = e.target.closest(".xbtn"); if (b) go(b.dataset.go); });
+
+function go(stageId, toolId){
+  const h = toolId || stageId || "";
+  if (location.hash.slice(1) !== h) location.hash = h; else render();
+  if (h) setTimeout(() => view.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"}), 30);
 }
-function go(i,push=true){
-  i=Math.max(0,Math.min(S.length-1,i)); cur=i;
-  const s=S[i], m=$('#main'); m.innerHTML='';
-  if(s.u && s.kind!=='unitEnd'){
-    const U=UNITS[s.u-1], list=unitLessons(s.u), pos=list.indexOf(s)+1;
-    m.append(el('div','unitbar',`<span><b>${U.code}</b> · ${U.title}</span><span>الشاشة ${pos} من ${list.length}</span><span class="lo"><b>ناتج التعلم:</b> ${U.lo}</span>`));
+function parseHash(){
+  const h = location.hash.slice(1);
+  if (PAGES.includes(h)) return {page:h};
+  if (T[h]) return {stage:stageOf(h).id, tool:h};
+  if (STAGES.some(s => s.id === h)) return {stage:h, tool:null};
+  return {};
+}
+
+function homeView(){
+  return `<div class="sec-title"><h2>مراحل الدليل وأدواتها</h2><span>اختر مرحلة لتبدأ</span></div>
+  <div class="overview">${STAGES.map(s => `
+    <button class="ov s-${s.k}" onclick="go('${s.id}')">
+      <div class="top grad">${svg(s.k)}<span class="big">${s.ch}</span><div><b>${s.ar}</b><small>${s.en} · ${cnt(s.tools.length)}</small></div></div>
+      <div class="body"><p>${s.desc}</p><div class="chips">${s.tools.map(id => `<span class="chip">${T[id].name}</span>`).join("")}</div></div>
+    </button>`).join("")}</div>`;
+}
+
+function stageView(s){
+  return `<section class="stage s-${s.k}">
+    <div class="stage-hero grad">
+      <div><span class="part">${s.part}</span><h2>${s.ch} · مرحلة ${s.ar} <span style="font-weight:400;opacity:.8;font-size:.6em">${s.en}</span></h2><p>${s.desc}</p></div>
+      ${svg(s.k,"art")}
+    </div>
+    <div class="tools">${s.tools.map(id => { const t = T[id]; return `
+      <button class="tool" onclick="go(null,'${id}')">
+        <span class="mono grad">${MONO[id]}</span>
+        <span class="num">بطاقة الأداة ${t.n}</span>
+        <span class="nm">${t.name}</span>
+        <span class="ds">${t.short}</span>
+        <span class="go">افتح البطاقة ←</span>
+      </button>`; }).join("")}</div>
+  </section>`;
+}
+
+function toolView(s, t, id){
+  const i = s.tools.indexOf(id), prevId = s.tools[i-1], nextId = s.tools[i+1];
+  const panes = [
+    `<p>${t.def}</p><h3>الاستخدامات في التصميم التعليمي</h3><ul class="uses">${t.uses.map(u=>`<li>${u}</li>`).join("")}</ul>`,
+    `<ol class="steps">${t.steps.map(x=>`<li><span>${x}</span></li>`).join("")}</ol>`,
+    `<span class="casechip">الحالة التطبيقية · الخطوة ${t.step} من 12</span>
+     <div class="scenario"><b>الموقف:</b> ${t.sc}</div>
+     <h3>الأمر أو المدخل المقترح</h3>
+     <div class="prompt" ${t.ltr ? 'dir="ltr"' : ''} id="prompt-text">${esc(t.pr)}<button class="copy" id="copy-btn" type="button">نسخ الأمر</button></div>
+     <div class="note"><b>المخرج المتوقع</b>${t.out}</div>`,
+    `<div class="split">
+       <div class="box pro"><h3>المزايا</h3><ul>${t.pros.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+       <div class="box con"><h3>القيود</h3><ul>${t.cons.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+     </div>
+     <div class="note"><b>الفائدة في التصميم التعليمي</b>${t.ben}</div>
+     <div class="note"><b>حد الاستخدام التعليمي</b>${t.lim}</div>
+     <div style="overflow-x:auto"><table class="facts"><tbody>${t.info.map((v,k)=>`<tr><th>${INFO_LABELS[k]}</th><td>${v}</td></tr>`).join("")}</tbody></table></div>
+     <div class="links">
+       <a class="primary" href="${t.links[0]}" target="_blank" rel="noopener">الدخول إلى الأداة ↗</a>
+       <a href="${t.links[1]}" target="_blank" rel="noopener">للمزيد عن الأداة</a>
+       <a href="${t.links[2]}" target="_blank" rel="noopener">الخطط والأسعار</a>
+     </div>
+     <p class="date">معلومات الأسعار والخطط بحسب الصفحات الرسمية يوم 14 نوفمبر 2026، وقد تتغير بحسب المنطقة والضرائب وطريقة الدفع.</p>`,
+    `<div class="eth"><h3>تنبيهات الاستخدام الأخلاقي</h3><ul>${t.eth.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+     <div class="note"><b>الأداة البديلة</b>${t.alt}</div>
+     <button class="btn" style="align-self:flex-start" onclick="go('ethics')">الإرشادات الأخلاقية العامة ←</button>`
+  ];
+  return `<article class="sheet s-${s.k}">
+    <div class="sheet-top grad">
+      <div class="crumbs">
+        <button class="btn" onclick="go('')">→ الرئيسية</button>
+        <button class="btn" onclick="go('${s.id}')">مرحلة ${s.ar}</button>
+      </div>
+      <div class="idrow"><span class="mono">${MONO[id]}</span><div>
+        <span class="meta">بطاقة الأداة ${t.n} · ${s.part}</span>
+        <h2>${t.name}</h2>
+        ${t.prev ? `<span class="meta">الاسم السابق: ${t.prev}</span>` : ""}
+      </div></div>
+    </div>
+    <div class="tabs" role="tablist">${TABS.map((x,k)=>`<button class="tab" role="tab" id="tab-${k}" aria-selected="${k===state.tab}" onclick="setTab(${k})">${x}</button>`).join("")}</div>
+    <div class="pane" role="tabpanel">${panes[state.tab]}</div>
+    <div class="pager">
+      ${state.tab > 0 ? `<button class="btn" onclick="setTab(${state.tab-1})">→ السابق</button>` : prevId ? `<button class="btn" onclick="go(null,'${prevId}')">→ ${T[prevId].name}</button>` : `<span></span>`}
+      ${state.tab < LAST ? `<button class="btn" onclick="setTab(${state.tab+1})">التالي: ${TABS[state.tab+1]} ←</button>` : nextId ? `<button class="btn" onclick="go(null,'${nextId}')">الأداة التالية: ${T[nextId].name} ←</button>` : `<button class="btn" onclick="go('${s.id}')">العودة إلى مرحلة ${s.ar} ←</button>`}
+    </div>
+  </article>`;
+}
+
+function pageView(id){
+  if (id === "ethics") return `<section class="ref">
+    <div class="ref-top grad s-I"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+      <div><h2>الإرشادات الأخلاقية</h2><p>مبادئ تنطبق على كل أدوات الدليل، وتجد تنبيهات خاصة بكل أداة في بطاقتها.</p></div></div>
+    <div class="ref-body">
+      <div class="principles s-I">${ETHICS.map(([h,t],k)=>`<div><b><i>${k+1}</i>${h}</b><span>${t}</span></div>`).join("")}</div>
+      <h3 style="font-size:18px">قبل أن تستخدم أي أداة</h3>
+      <ul class="checklist">${CHECK.map((c,k)=>`<li><label for="chk-${k}"><input type="checkbox" id="chk-${k}"><span>${c}</span></label></li>`).join("")}</ul>
+      <p class="date">للاستزادة: مبادئ أخلاقيات الذكاء الاصطناعي الصادرة عن سدايا، وإرشادات اليونسكو للذكاء الاصطناعي التوليدي في التعليم والبحث (انظر المراجع).</p>
+    </div></section>`;
+  if (id === "glossary") return `<section class="ref">
+    <div class="ref-top grad s-D1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg>
+      <div><h2>المسرد</h2><p>${GLOSSARY.length} مصطلحًا بالعربية والإنجليزية.</p></div></div>
+    <div class="ref-body">
+      <input class="gsearch" id="gsearch" type="search" placeholder="ابحث عن مصطلح بالعربية أو الإنجليزية" aria-label="بحث في المسرد">
+      <div class="gloss" id="gloss">${GLOSSARY.map(([a,e,d])=>`<div data-k="${esc((a+" "+e).toLowerCase())}"><b>${a}<span class="en">${e}</span></b><span>${d}</span></div>`).join("")}</div>
+    </div></section>`;
+  return `<section class="ref">
+    <div class="ref-top grad s-A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"/></svg>
+      <div><h2>المراجع</h2><p>المصادر العلمية والرسمية التي استند إليها الدليل.</p></div></div>
+    <div class="ref-body"><ol class="refs">${REFS.map(([r,u])=>`<li ${/^[A-Z]/.test(r) ? 'dir="ltr"' : ''}>${r}${u ? ` <a href="${u}" target="_blank" rel="noopener">${u}</a>` : ""}</li>`).join("")}</ol></div>
+  </section>`;
+}
+
+function render(){
+  const p = parseHash();
+  if (p.tool !== state.tool) state.tab = 0;
+  state.stage = p.stage || null; state.tool = p.tool || null;
+  rail.classList.toggle("has-sel", !!state.stage);
+  rail.querySelectorAll(".letter").forEach(b => b.setAttribute("aria-pressed", b.dataset.stage === state.stage));
+  document.querySelectorAll(".xbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.go === p.page));
+  hint.hidden = !!(state.stage || p.page);
+  if (p.page) { view.hidden = false; view.innerHTML = pageView(p.page); return; }
+  const s = STAGES.find(x => x.id === state.stage);
+  view.hidden = !s;
+  view.innerHTML = !s ? "" : state.tool ? toolView(s, T[state.tool], state.tool) : stageView(s);
+}
+function setTab(k){
+  state.tab = k;
+  view.innerHTML = toolView(STAGES.find(x => x.id === state.stage), T[state.tool], state.tool);
+  const a = view.querySelector('.tab[aria-selected="true"]'); if (a) a.scrollIntoView({inline:"nearest", block:"nearest"});
+}
+
+view.addEventListener("click", e => {
+  if (e.target.id !== "copy-btn") return;
+  const btn = e.target, t = T[state.tool];
+  const done = () => { btn.textContent = "تم النسخ ✓"; setTimeout(() => btn.textContent = "نسخ الأمر", 1600); };
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents(document.getElementById("prompt-text")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); btn.textContent = "النص محدد، انسخه يدويًا"; };
+  try { navigator.clipboard.writeText(t.pr).then(done, fallback); } catch { fallback(); }
+});
+view.addEventListener("input", e => {
+  if (e.target.id !== "gsearch") return;
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("#gloss > div").forEach(d => d.hidden = !!q && !d.dataset.k.includes(q) && !d.textContent.toLowerCase().includes(q));
+});
+window.addEventListener("hashchange", render);
+render();
+
+/* hero: drifting neural network in the five stage colors */
+(function(){
+  const cv = document.getElementById("net"), ctx = cv.getContext("2d");
+  if (!ctx) return;
+  const cols = ["#9fd3fa","#5fb7f0","#3f84de","#2b5cb8","#7fb0ec"];
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, pts = [];
+  function size(){
+    const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; ctx.setTransform(d,0,0,d,0,0);
+    const n = Math.round(Math.min(70, W * H / 9000));
+    pts = Array.from({length:n}, (_, i) => ({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25, c:cols[i%5], r:1.2+Math.random()*1.8}));
   }
-  R[s.kind](s,m);
-  const p=el('div','pager');
-  const prev=el('button','btn ghost','→ السابق'); prev.onclick=()=>go(i-1); prev.style.visibility=i?'visible':'hidden';
-  const next=el('button','btn',i===0?'ابدأ ←':'التالي ←'); next.onclick=()=>go(i+1); next.style.visibility=i<S.length-1?'visible':'hidden';
-  p.append(prev,next); m.append(p);
-  if(['cover','guide','menu','refs'].includes(s.kind)) finish(s.id);
-  paintNav(); $('#side').classList.remove('show');
-  if(push) history.replaceState(null,'','#'+s.id);
-  window.scrollTo(0,0); m.focus({preventScroll:true});
-}
-function head(s,m){
-  m.append(el('span','tag',`${s.nav.split(' ')[0]} · ${s.type}`));
-  m.append(el('h1','',s.title));
-  if(s.lead) m.append(el('p','lead',s.lead));
-}
-const hint=t=>el('div','hint',t);
-const fbBox=(t,ok=true)=>el('div','fb '+(ok?'ok':'no'),t);
-function media(svg,cap){const d=el('div','media',svg); if(cap) d.append(el('div','cap',cap)); return d;}
-
-/* =========================================================
-   أنماط الشاشات
-   ========================================================= */
-const R={};
-
-R.cover=(s,m)=>{
-  m.append(el('div','cover',`
-   <span class="tag">مسار تعلم رقمي تفاعلي · أربع وحدات تعلم صغيرة قابلة لإعادة الاستخدام (RLOs)</span>
-   <h1>إنترنت الأشياء: من المفهوم إلى الاستخدام المسؤول</h1>
-   <p class="lead">تعرّف إنترنت الأشياء ومكوناته، واكتشف تطبيقاته في المنزل والمدرسة والصحة، وصمّم نظاماً لمدرسة ذكية، ثم احمِ البيانات والأجهزة.</p>
-   <div class="media">${IMG.things}</div>
-   <div class="box" style="margin:6px 0"><b>الفئة المستهدفة:</b> طلاب المرحلة الثانوية · <b>المدة التقريبية:</b> 28 دقيقة (أربع وحدات)<br>
-   <b>إعداد:</b> أكرم العنزي · أحمد الفالح · زياد الشهري · محمد الأنصاري</div>
-   <div class="meta">مقرر ممارسات متقدمة في تطوير المحتوى الإلكتروني · الماجستير المهني في تصميم التعليم والتكنولوجيا · جامعة الأميرة نورة بنت عبدالرحمن</div>`));
-};
-
-R.guide=(s,m)=>{
-  m.append(el('span','tag','قبل أن تبدأ'),el('h1','','تعليمات استخدام المنتج'));
-  m.append(el('div','box',`<ul class="goals">
-   <li>يتكون المسار من أربع وحدات، ولكل وحدة ناتج تعلم يظهر أعلى كل شاشة من شاشاتها.</li>
-   <li>كل وحدة مستقلة: يمكنك البدء بأي وحدة من القائمة الرئيسة، أو فتحها مباشرة برابطها (مثل <b>#rlo3</b>).</li>
-   <li>تنقّل بزرّي <b>التالي</b> و<b>السابق</b> أسفل الشاشة، أو من قائمة المحتويات الجانبية.</li>
-   <li>ابحث عن العبارة المسبوقة بـ 👆؛ فهي تخبرك بما تفعله في كل شاشة.</li>
-   <li>تظهر التغذية الراجعة فوراً: <span style="color:#1e8e5a;font-weight:700">الأخضر</span> للإجابة الصحيحة، و<span style="color:#c0392b;font-weight:700">الأحمر</span> مع توضيح يساعدك على المحاولة من جديد.</li>
-   <li>يُحفظ تقدّمك في هذا المتصفح، وتظهر نتيجتك في ختام كل وحدة وفي الخلاصة.</li></ul>`));
-  m.append(el('h3','','أنماط التفاعل في المسار'));
-  m.append(el('div','legend',`<div>🔍 كشف الكلمات المفتاحية</div><div>🃏 بطاقات تفاعلية وقلّابة</div><div>🖼️ صور تفاعلية بنقاط ساخنة</div><div>📊 إنفوجرافيك بأسئلة توقف</div><div>✋ سحب وإفلات (تصنيف وبناء نظام)</div><div>🧭 سيناريوهات اتخاذ القرار</div><div>✅ اختيار من متعدد</div>`));
-};
-
-R.menu=(s,m)=>{
-  m.append(el('span','tag','القائمة الرئيسة'),el('h1','','اختر الوحدة التي تبدأ بها'));
-  m.append(el('p','lead','الوحدات مرتبة في مسار متكامل، لكن كل وحدة تعمل بصورة مستقلة.'));
-  const g=el('div','units');
-  UNITS.forEach(U=>{
-    const list=unitLessons(U.k), n=list.filter(x=>isDone(x.id)).length;
-    const c=el('div','ucard',`<span class="k">${U.code} · ${U.time} · ${list.length} شاشات</span><h3>${U.title}</h3><p>${U.lo}</p>
-      <div class="pr"><i style="width:${n/list.length*100}%"></i></div><small>${n} من ${list.length} مكتملة</small>`);
-    const b=el('button','btn',n===list.length?'مراجعة الوحدة':n?'متابعة الوحدة':'ابدأ الوحدة');
-    b.onclick=()=>go(S.indexOf(list.find(x=>!isDone(x.id))||list[0]));
-    c.append(b); g.append(c);
-  });
-  m.append(g);
-};
-
-/* S1.1 كشف الكلمات المفتاحية */
-R.keywords=(s,m)=>{
-  head(s,m);
-  const d=el('div','def'); s.parts.forEach(p=>d.append(typeof p==='string'?document.createTextNode(p):el('span','kw',p.k)));
-  const img=media(IMG.things,'أجهزة مادية متصلة بالإنترنت (رسم توضيحي أصلي)');
-  const fb=fbBox(s.fb), b=el('button','btn amber','🔍 '+s.btn);
-  b.onclick=()=>{ const ks=[...d.querySelectorAll('.kw')]; b.disabled=true;
-    ks.forEach((k,i)=>setTimeout(()=>{k.classList.add('lit'); if(i===ks.length-1){img.firstChild.classList.add('svgOn'); fb.classList.add('show'); finish(s.id);}},i*550)); };
-  m.append(d,el('div','row'),b,img,fb); m.querySelector('.row').append(b);
-  if(isDone(s.id)){d.querySelectorAll('.kw').forEach(k=>k.classList.add('lit')); img.firstChild.classList.add('svgOn'); fb.classList.add('show');}
-};
-
-/* S1.2 بطاقات بنافذة تفصيلية */
-R.cardsModal=(s,m)=>{
-  head(s,m); m.append(hint(s.hint));
-  const img=media(s.img()), g=el('div','grid'), fb=fbBox(s.fb), seen=new Set();
-  s.items.forEach((it,i)=>{
-    const t=el('button','tile',`<span class="ic">${it.ic}</span><b>${it.t}</b><span class="q">اضغط للتفاصيل</span>`);
-    t.onclick=()=>{ seen.add(i); t.classList.add('seen');
-      img.querySelectorAll('.node').forEach((n,j)=>n.classList.toggle('hl',j===i));
-      openModal(`<span style="font-size:2.2rem">${it.ic}</span><h2>${it.t}</h2><p>${it.d}</p><div class="ex"><b>مثال:</b> ${it.ex}</div>`,
-        ()=>{ if(seen.size===s.items.length){fb.classList.add('show'); finish(s.id);} t.focus(); }); };
-    g.append(t);
-  });
-  m.append(img,g,fb); if(isDone(s.id)) fb.classList.add('show');
-};
-function openModal(html,onClose){
-  const o=el('div','modal'), inn=el('div','in',html), c=el('button','btn','فهمت ✓');
-  o.setAttribute('role','dialog'); o.setAttribute('aria-modal','true');
-  const close=()=>{o.remove(); document.removeEventListener('keydown',esc); onClose&&onClose();};
-  const esc=e=>{if(e.key==='Escape')close();};
-  c.onclick=close; o.onclick=e=>{if(e.target===o)close();}; document.addEventListener('keydown',esc);
-  inn.append(c); o.append(inn); document.body.append(o); c.focus();
-}
-
-/* S1.3 إنفوجرافيك متدرج بأسئلة توقف */
-R.stepper=(s,m)=>{
-  head(s,m);
-  const row=el('div','stages'), cards=s.stages.map(st=>{const c=el('div','stage',`<span class="ic">${st.ic}</span><b>${st.t}</b>`); row.append(c); return c;});
-  const panel=el('div','panel'), qbox=el('div'), fin=fbBox(s.fb);
-  m.append(row,panel,qbox,fin);
-  let k=0;
-  const show=i=>{ k=i; cards.forEach((c,j)=>{c.classList.toggle('on',j<=i); c.classList.remove('cur');});
-    void cards[i].offsetWidth; cards[i].classList.add('cur');
-    panel.innerHTML=`<h3>المرحلة ${i+1}: ${s.stages[i].t}</h3>${s.stages[i].d}`;
-    qbox.innerHTML='';
-    if(i<s.qs.length) ask(i); else { panel.innerHTML+=`<p style="margin:8px 0 0"><b>مثال:</b> يرصد المستشعر ارتفاع الحرارة، فيرسل البيانات، ثم يصدر النظام أمراً بتشغيل التكييف.</p>`; fin.classList.add('show'); finish(s.id);} };
-  const ask=i=>{
-    const q=s.qs[i], b=el('div','box',`<h3>⏸ سؤال توقف</h3><b>${q.q}</b>`), opts=el('div','opts'), fb=el('div','fb');
-    const acts=el('div','row'), nx=el('button','btn','متابعة ←'), rp=el('button','btn ghost','↺ إعادة المرحلة');
-    nx.disabled=true; rp.onclick=()=>show(i); nx.onclick=()=>show(i+1);
-    q.o.forEach((t,j)=>{const o=el('button','opt',`<b>${L[j]})</b> ${t}`);
-      o.onclick=()=>{ if(nx.disabled===false) return; const ok=j===q.a; attempt(`s13q${i}`,ok);
-        [...opts.children].forEach(x=>x.classList.remove('wrong')); o.classList.add(ok?'right':'wrong');
-        fb.className='fb show '+(ok?'ok':'no'); fb.textContent=ok?s.ok:s.no; if(ok) nx.disabled=false; };
-      opts.append(o);});
-    acts.append(nx,rp); b.append(opts,fb,acts); qbox.append(b);
-  };
-  show(isDone(s.id)?s.stages.length-1:0);
-  if(isDone(s.id)) cards.forEach(c=>c.classList.add('on'));
-};
-
-/* سحب وإفلات عام: يدعم السحب بالفأرة والنقر (للمس ولوحة المفاتيح) */
-function dnd(zones,onChange){
-  let dragged=null, picked=null;
-  const move=(c,z)=>{ $('.chips',z).append(c); c.classList.remove('picked'); picked=null; zones.forEach(x=>x.classList.remove('armed')); onChange(); };
-  zones.forEach(z=>{
-    z.ondragover=e=>{e.preventDefault(); z.classList.add('over')};
-    z.ondragleave=()=>z.classList.remove('over');
-    z.ondrop=e=>{e.preventDefault(); z.classList.remove('over'); if(dragged) move(dragged,z); dragged=null;};
-    z.onclick=e=>{ if(picked && !e.target.closest('.chip')) move(picked,z); };
-  });
-  return {wire(c){ c.draggable=true; c.ondragstart=()=>{dragged=c};
-    c.onclick=e=>{ e.stopPropagation();
-      if(picked===c){c.classList.remove('picked'); picked=null; zones.forEach(x=>x.classList.remove('armed')); return;}
-      if(picked && picked.closest('.zone')!==c.closest('.zone')){ move(picked,c.closest('.zone')); return; }
-      if(picked) picked.classList.remove('picked');
-      picked=c; c.classList.add('picked'); zones.forEach(x=>x.classList.toggle('armed', x!==c.closest('.zone'))); }; }};
-}
-
-/* S1.4 تصنيف */
-R.classify=(s,m)=>{
-  head(s,m); m.append(hint(s.hint));
-  const pool=el('div','zone','<h3>العناصر</h3><div class="chips"></div>');
-  const bins=s.bins.map(b=>el('div','zone target',`<h3>${b}</h3><div class="chips"></div>`));
-  const wrap=el('div','dd'); const two=el('div','grid'); bins.forEach(b=>two.append(b)); wrap.append(pool,two);
-  const btn=el('button','btn','تحقق من الإجابة'), fb=el('div','fb'); btn.disabled=true;
-  const D=dnd([pool,...bins],()=>{ btn.disabled=$('.chips',pool).children.length>0; fb.className='fb'; wrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('good','bad')); });
-  s.items.forEach(it=>{const c=el('button','chip',it.t); c.dataset.b=it.b; D.wire(c); $('.chips',pool).append(c);});
-  btn.onclick=()=>{ let ok=true;
-    bins.forEach((z,bi)=>z.querySelectorAll('.chip').forEach(c=>{const g=+c.dataset.b===bi; c.classList.add(g?'good':'bad'); if(!g) ok=false;}));
-    attempt(s.id,ok); fb.className='fb show '+(ok?'ok':'no'); fb.textContent=ok?s.ok:s.no; if(ok) finish(s.id); };
-  m.append(wrap,el('div','row')); m.querySelector('.row').append(btn); m.append(fb);
-};
-
-/* S2.1 و S4.2 صورة تفاعلية بنقاط ساخنة (نقر) */
-R.hotspot=(s,m)=>{
-  head(s,m); m.append(hint(s.hint));
-  const box=media(s.img(),s.cap), svg=box.querySelector('svg'), panel=el('div','panel','<h3>اختر نقطة على الصورة</h3>'), fb=fbBox(s.fb), seen=new Set();
-  s.spots.forEach((p,i)=>{
-    const h=el('button','hs',String(i+1)); h.style.left=p.x+'%'; h.style.top=p.y+'%'; h.setAttribute('aria-label',p.t);
-    h.onclick=()=>{ seen.add(i); h.classList.add('seen'); box.querySelectorAll('.hs').forEach(x=>x.classList.toggle('cur',x===h));
-      if(s.keep) svg.classList.add(p.cls); else { s.spots.forEach(q=>svg.classList.remove(q.cls)); svg.classList.add(p.cls); }
-      panel.innerHTML=`<h3>${p.t}</h3>${p.d}`;
-      if(seen.size===s.spots.length){fb.classList.add('show'); finish(s.id);} };
-    box.append(h);
-  });
-  m.append(box,panel,fb); if(isDone(s.id)) fb.classList.add('show');
-};
-
-/* S2.2 صورة تفاعلية بتمرير المؤشر */
-R.hover=(s,m)=>{
-  head(s,m); m.append(hint(s.hint));
-  const box=media(s.img(),s.cap), svg=box.querySelector('svg'), tip=el('div','tip'), fb=fbBox(s.fb), seen=new Set();
-  tip.style.display='none'; box.append(tip);
-  const hide=()=>{tip.style.display='none'; s.spots.forEach(q=>svg.classList.remove(q.cls));};
-  s.spots.forEach((p,i)=>{
-    const h=el('button','hs',String(i+1)); h.style.left=p.x+'%'; h.style.top=p.y+'%'; h.setAttribute('aria-label',p.t);
-    const showTip=()=>{ hide(); svg.classList.add(p.cls); tip.innerHTML=`<b>${p.t}</b>${p.d}`; tip.style.display='block';
-      tip.style.top=`calc(${p.y}% + 26px)`; tip.style.left=p.x>55?'auto':`calc(${p.x}% - 20px)`; tip.style.right=p.x>55?`calc(${100-p.x}% - 20px)`:'auto';
-      seen.add(i); h.classList.add('seen'); if(seen.size===s.spots.length){fb.classList.add('show'); finish(s.id);} };
-    h.onmouseenter=showTip; h.onfocus=showTip; h.onclick=showTip; h.onmouseleave=hide; h.onblur=hide;
-    box.append(h);
-  });
-  m.append(box,fb); if(isDone(s.id)) fb.classList.add('show');
-};
-
-/* S2.3 بطاقات قلّابة */
-R.flip=(s,m)=>{
-  head(s,m); m.append(hint(s.hint));
-  const box=media(s.img(),s.cap), svg=box.querySelector('svg'), g=el('div','grid'), fb=fbBox(s.fb), seen=new Set();
-  s.items.forEach((it,i)=>{
-    const c=el('button','flip',`<div class="in"><div class="f"><span class="ic">${it.ic}</span><b>${it.t}</b><small>اضغط لقلب البطاقة</small></div><div class="b"><b style="color:#f2a516">${it.t}</b>${it.d}</div></div>`);
-    c.setAttribute('aria-pressed','false');
-    c.onclick=()=>{ const on=c.classList.toggle('on'); c.setAttribute('aria-pressed',on);
-      s.items.forEach(x=>svg.classList.remove(x.cls)); if(on) svg.classList.add(it.cls);
-      seen.add(i); if(seen.size===s.items.length){fb.classList.add('show'); finish(s.id);} };
-    g.append(c);
-  });
-  m.append(box,g,fb); if(isDone(s.id)) fb.classList.add('show');
-};
-
-/* S3.1 و S3.2 و S4.1 و S4.3 الكشف بالنقر */
-R.reveal=(s,m)=>{
-  head(s,m); m.append(hint(s.hint));
-  let svg=null; if(s.img){const b=media(s.img(),s.cap); svg=b.querySelector('svg'); m.append(b);}
-  const g=el('div',s.steps?'steps':'grid'), fb=fbBox(s.fb), seen=new Set();
-  s.items.forEach((it,i)=>{
-    const t=el('button','tile',`${s.numbered?`<span class="num">${i+1}</span>`:''}<span class="ic">${it.ic}</span><b>${it.t}</b><span class="q">${it.q}</span><span class="more">${it.m}</span>`);
-    t.setAttribute('aria-expanded','false');
-    t.onclick=()=>{ const o=t.classList.toggle('open'); t.setAttribute('aria-expanded',o); seen.add(i);
-      if(svg&&it.cls){ s.items.forEach(x=>x.cls&&svg.classList.remove(x.cls)); if(o) svg.classList.add(it.cls); if(it.cls==='p-enc'&&o) svg.classList.add('svgOn'); }
-      if(seen.size===s.items.length){fb.classList.add('show'); finish(s.id);} };
-    g.append(t);
-  });
-  m.append(g,fb); if(isDone(s.id)) fb.classList.add('show');
-};
-
-/* S3.3 بناء النظام */
-R.build=(s,m)=>{
-  head(s,m); m.append(hint(s.hint));
-  const pool=el('div','zone','<h3>المكونات المتاحة</h3><div class="chips"></div>');
-  const board=el('div','zone target','<h3>لوحة النظام</h3><div class="chips"></div>');
-  const two=el('div','grid'); two.append(pool,board);
-  const need=s.parts.filter(p=>p.ok).length, btn=el('button','btn','تحقق من التركيب'), fb=el('div','fb'), res=el('div'); btn.disabled=true;
-  const D=dnd([pool,board],()=>{ btn.disabled=board.querySelectorAll('.chip').length<need; fb.className='fb'; res.innerHTML='';
-    two.querySelectorAll('.chip').forEach(c=>c.classList.remove('good','bad')); });
-  s.parts.forEach(p=>{const c=el('button','chip',p.t); c.dataset.ok=p.ok; D.wire(c); $('.chips',pool).append(c);});
-  btn.onclick=()=>{ const on=[...board.querySelectorAll('.chip')]; on.forEach(c=>c.classList.add(c.dataset.ok==='1'?'good':'bad'));
-    const ok=on.length===need&&on.every(c=>c.dataset.ok==='1'); attempt(s.id,ok);
-    fb.className='fb show '+(ok?'ok':'no'); fb.textContent=ok?s.ok:s.no;
-    if(ok){ res.innerHTML=''; const b=media(s.done(),'النظام الذي صمّمته: من القياس إلى العرض'); b.firstChild.classList.add('svgOn'); res.append(b); finish(s.id);} };
-  m.append(two,el('div','row')); m.querySelector('.row').append(btn); m.append(fb,res);
-};
-
-/* الاختيار من متعدد والسيناريوهات */
-R.quiz=(s,m)=>{
-  head(s,m); let solved=0; const boxes=[];
-  s.qs.forEach((q,qi)=>{
-    const box=el('div','box',`<h3>${q.s}</h3><b>${q.q}</b>`), opts=el('div','opts'), fb=el('div','fb'), acts=el('div','row');
-    const btn=el('button','btn',s.btn); btn.disabled=true; let sel=null, locked=false;
-    q.o.forEach((o,oi)=>{ const b=el('button','opt',`<b>${L[oi]})</b> ${o.t}`);
-      b.onclick=()=>{ if(locked) return; sel=oi; [...opts.children].forEach(x=>x.classList.remove('sel','wrong')); b.classList.add('sel'); btn.disabled=false; fb.className='fb'; };
-      opts.append(b); });
-    btn.onclick=()=>{ const o=q.o[sel], b=opts.children[sel]; attempt(s.id+qi,!!o.ok);
-      b.classList.remove('sel'); b.classList.add(o.ok?'right':'wrong'); fb.className='fb show '+(o.ok?'ok':'no'); fb.textContent=o.f||q.wrong; btn.disabled=true;
-      if(o.ok){ locked=true; solved++;
-        if(s.seq && qi<s.qs.length-1){ const nx=el('button','btn amber','متابعة ←'); nx.onclick=()=>{nx.remove(); boxes[qi+1].style.display=''; boxes[qi+1].scrollIntoView({behavior:'smooth',block:'center'});}; acts.append(nx); }
-        if(solved===s.qs.length) finish(s.id); } };
-    acts.append(btn); box.append(opts,acts,fb); if(s.seq&&qi>0&&!isDone(s.id)) box.style.display='none';
-    boxes.push(box); m.append(box);
-  });
-};
-
-/* ختام الوحدة */
-function unitScore(U){ const k=U.keys, r=k.filter(x=>ST.first[x]===true).length, t=k.filter(x=>x in ST.first).length; return {r,t,n:k.length}; }
-R.unitEnd=(s,m)=>{
-  const U=UNITS[s.u-1], list=unitLessons(U.k), n=list.filter(x=>isDone(x.id)).length, sc=unitScore(U);
-  m.append(el('span','tag',`${U.code} · ختام الوحدة`),el('h1','',`أنهيت وحدة «${U.title}»`));
-  m.append(el('div','box',`<h3>ناتج التعلم</h3>${U.lo}`));
-  m.append(el('div','box',`<h3>إجاباتك الصحيحة من المحاولة الأولى في تقويمات الوحدة</h3><div class="score">${sc.r} / ${sc.n}</div>
-    <div>أنجزت ${n} من ${list.length} شاشات.${sc.t<sc.n?' بقيت أسئلة لم تُجب عنها بعد.':''}</div>`));
-  m.append(el('div','box',`<h3>تذكّر</h3><ul class="goals">${U.sum.map(x=>`<li>${x}</li>`).join('')}</ul>`));
-  const row=el('div','row'), a=el('button','btn ghost','القائمة الرئيسة'); a.onclick=()=>go(S.findIndex(x=>x.id==='menu')); row.append(a);
-  if(U.k<4){const b=el('button','btn',`الوحدة التالية: ${UNITS[U.k].title} ←`); b.onclick=()=>go(S.indexOf(unitLessons(U.k+1)[0])); row.append(b);}
-  m.append(row); if(n===list.length) finish(s.id);
-};
-
-/* الخلاصة */
-R.final=(s,m)=>{
-  const all=UNITS.flatMap(U=>U.keys), r=all.filter(k=>ST.first[k]===true).length;
-  const n=lessons.filter(x=>isDone(x.id)).length;
-  m.append(el('span','tag','الختام'),el('h1','','الخلاصة ونتيجتك'));
-  m.append(el('div','box',`<h3>إجاباتك الصحيحة من المحاولة الأولى في المسار كله</h3><div class="score">${r} / ${all.length}</div><div>أنجزت ${n} من ${lessons.length} شاشة تعليمية.</div>`));
-  const g=el('div','units');
-  UNITS.forEach(U=>{const sc=unitScore(U), list=unitLessons(U.k), d=list.filter(x=>isDone(x.id)).length;
-    g.append(el('div','ucard',`<span class="k">${U.code}</span><h3>${U.title}</h3><p>التقويم: ${sc.r} من ${sc.n} · الشاشات: ${d} من ${list.length}</p>`));});
-  m.append(g);
-  m.append(el('div','box',`<h3>نشاط إثرائي</h3>اختر مشكلة حقيقية في مدرستك أو مكان عملك، وطبّق عليها مراحل التصميم الأربع: ما المشكلة؟ ماذا ستقيس ومن يستلم البيانات؟ ما المكونات المناسبة؟ وأين ستجرّب الحل أولاً؟ ثم حدّد إجراءين لحماية خصوصية المستخدمين وأمن الأجهزة.`));
-  const rs=el('button','btn ghost','↺ مسح التقدم وإعادة المسار');
-  rs.onclick=()=>{ ST={done:[],first:{}}; save(); go(0); };
-  m.append(rs); finish(s.id);
-};
-
-/* المراجع */
-R.refs=(s,m)=>{
-  m.append(el('span','tag','المراجع'),el('h1','','المراجع ومصادر المحتوى'));
-  m.append(el('div','box',`<ol class="refs">
-   <li>International Telecommunication Union. (2012). <i>Overview of the Internet of things</i> (Recommendation ITU-T Y.2060, renumbered Y.4000). <a href="https://www.itu.int/rec/T-REC-Y.2060-201206-I" target="_blank" rel="noopener">https://www.itu.int/rec/T-REC-Y.2060-201206-I</a></li>
-   <li>OWASP Foundation. (2018). <i>OWASP Internet of Things Top 10</i>. <a href="https://owasp.org/www-project-internet-of-things/" target="_blank" rel="noopener">https://owasp.org/www-project-internet-of-things/</a></li>
-   <li>National Institute of Standards and Technology. (2020). <i>Foundational cybersecurity activities for IoT device manufacturers</i> (NISTIR 8259). <a href="https://csrc.nist.gov/pubs/ir/8259/final" target="_blank" rel="noopener">https://csrc.nist.gov/pubs/ir/8259/final</a></li>
-   <li>الهيئة السعودية للبيانات والذكاء الاصطناعي (سدايا). <i>نظام حماية البيانات الشخصية</i> (المرسوم الملكي م/19، 1443هـ) ولائحته التنفيذية. <a href="https://sdaia.gov.sa" target="_blank" rel="noopener">https://sdaia.gov.sa</a></li>
-  </ol>`));
-  m.append(el('div','box',`<h3>الوسائط وحقوق الاستخدام</h3>جميع الرسوم التوضيحية والصور التفاعلية في هذا المنتج رسوم SVG أصلية أُعدّت خصيصاً له، ولا تتضمن صوراً من مصادر خارجية. يُتاح المنتج وفق رخصة المشاع الإبداعي <b>CC BY-NC-SA 4.0</b>.`));
-};
-
-/* =========================================================
-   التشغيل والروابط المباشرة لكل وحدة (#rlo1 … #rlo4)
-   ========================================================= */
-function fromHash(){
-  const h=location.hash.slice(1); const mm=/^rlo([1-4])$/.exec(h);
-  if(mm) return S.indexOf(unitLessons(+mm[1])[0]);
-  const i=S.findIndex(x=>x.id===h); return i<0?0:i;
-}
-$('#menuBtn').onclick=()=>$('#side').classList.toggle('show');
-window.addEventListener('hashchange',()=>{const i=fromHash(); if(i!==cur) go(i);});
-go(fromHash());
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    for (let i=0;i<pts.length;i++){ const a = pts[i];
+      for (let j=i+1;j<pts.length;j++){ const b = pts[j], dx=a.x-b.x, dy=a.y-b.y, d=dx*dx+dy*dy;
+        if (d < 14000){ ctx.strokeStyle = a.c; ctx.globalAlpha = (1 - d/14000) * .35; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } } }
+    ctx.globalAlpha = 1;
+    for (const p of pts){ ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+      if (!still){ p.x += p.vx; p.y += p.vy; if (p.x<0||p.x>W) p.vx*=-1; if (p.y<0||p.y>H) p.vy*=-1; } }
+    if (!still) requestAnimationFrame(frame);
+  }
+  size(); frame(); addEventListener("resize", () => { size(); if (still) frame(); });
+})();
 </script>
+
 </body>
 </html>
